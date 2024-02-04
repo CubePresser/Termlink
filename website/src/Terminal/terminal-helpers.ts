@@ -2,7 +2,6 @@ import wordbank from './dictionary.json';
 
 const randomBucket = ['!','"','#','$','%','&','\'','(',')','*','+',',','-','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~',];
 
-// TODO: Implement padding
 const findWordSlots = (data: string, size: number, padding = 2): number[] => {
   const slots: number[] = [];
 
@@ -16,12 +15,16 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
       continue;
     }
 
-    // Window is size of a word and we have not encountered a word character
-    if (end - start == size) { 
-      slots.push(start);
+    // Buffer window by padding x2 (both sides of the word, effectively)
+    // TODO: Padding should not be applied to edges of the data stream, only between words
+
+    // Window is size of a word (+padding) and we have not encountered a word character
+    if ((end + 1) - start === size + padding*2) { 
+      slots.push(start + padding);
       start++;
     }
 
+    // Move the window along...
     end++;
   }
 

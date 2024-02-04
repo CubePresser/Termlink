@@ -17,14 +17,17 @@ const DataStream: React.FC<DataStreamProps> = ({data}) => {
       const start_c1 = row * 12;
       const start_c2 = start_c1 + 204;
 
+      const addr1 = `0x${(addr + start_c1).toString(16).toUpperCase()}`;
+      const addr2 = `0x${(addr + start_c2).toString(16).toUpperCase()}`;
+
       fragments.push(
-        <>
-          <span className="address">0x{(addr + start_c1).toString(16).toUpperCase()} </span>
+        <span key={`${addr1}-${addr2}`}>
+          <span className="address">{addr1} </span>
           <span className="data">{data.slice(start_c1, start_c1 + 12)} </span>
-          <span className="address">0x{(addr + start_c2).toString(16).toUpperCase()} </span>
+          <span className="address">{addr2} </span>
           <span className="data">{data.slice(start_c2, start_c2 + 12)}</span>
           <br/>
-        </>
+        </span>
       );
     }
 

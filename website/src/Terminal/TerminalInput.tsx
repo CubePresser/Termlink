@@ -41,8 +41,8 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput }) => {
         />
       </span>
       {
-        history.map((line) => (
-          <span>&nbsp;{">"}{line}</span>
+        history.map((line, idx) => (
+          <span key={idx}>&nbsp;{">"}{line}</span>
         )).reverse()
       }
     </div>
