@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 
-type TerminalHeaderProps = {
+type TermlinkHeaderProps = {
   attempts: number;
 };
 
-const TerminalHeader: React.FC<TerminalHeaderProps> = ({
+const TermlinkHeader: React.FC<TermlinkHeaderProps> = ({
   attempts,
 }) => {
   const attemptsSymbols = useMemo<string>(() => {
@@ -17,15 +17,15 @@ const TerminalHeader: React.FC<TerminalHeaderProps> = ({
   }, [attempts]);
 
   return (
-    <div className="TerminalHeader">
+    <div className="TermlinkHeader">
       <div>{'ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL'}</div>
       {attempts === 1
-        ? <div>{'!!! WARNING: LOCKOUT IMMINENT !!!'}</div>
-        : <br/>}
+        ? <div className="blink">{'!!! WARNING: LOCKOUT IMMINENT !!!'}</div>
+        : <div>{'ENTER PASSWORD NOW'}</div>}
       <br/>
       <div>{`${attempts} ATTEMPT(S) LEFT: ${attemptsSymbols}`}</div>
     </div>
   )
 }
 
-export default TerminalHeader;
+export default TermlinkHeader;

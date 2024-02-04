@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import TerminalHeader from './TerminalHeader';
+import TermlinkHeader from './TermlinkHeader';
 import DataStream from './DataStream';
 import TerminalInput from './TerminalInput';
 import { getWords, generateDataStream } from './terminal-helpers';
+import TerminalLocked from './TerminalLocked';
 
 // The basics :)
 
@@ -11,6 +12,7 @@ type TerminalProps = {
 }
 
 const Terminal: React.FC<TerminalProps> = () => {
+  const [ key, setKey ] = useState<string>(String(Math.random()));
   const [ data, setData ] = useState<string>("");
   const [ words, setWords ] = useState<string[]>([]);
   const [ attempts, setAttempts ] = useState<number>(4);
@@ -21,7 +23,7 @@ const Terminal: React.FC<TerminalProps> = () => {
 
     setWords(genWords);
     setData(genData);
-  }, []);
+  }, [key]);
 
   const password = useMemo<string>(() => {
     if (words.length === 0) {
@@ -60,14 +62,27 @@ const Terminal: React.FC<TerminalProps> = () => {
     return messages;
   };
 
+  const handleReset = () => {
+    setAttempts(4);
+    setWords([]);
+    setData("");
+    setKey(String(Math.random()));
+  };
+
   return (
     <div className="Terminal">
-      <TerminalHeader attempts={attempts} />
-      <br/>
-      <div className="data--container">
-        <DataStream data={data} />
-        <TerminalInput onInput={handleTerminalInput}/>
-      </div>
+      {
+        attempts > 0 ?
+          <>
+            <TermlinkHeader attempts={attempts} />
+            <br/>
+            <div className="data--container">
+              <DataStream data={data} />
+              <TerminalInput onInput={handleTerminalInput}/>
+            </div>
+          </>
+          : <TerminalLocked onReset={handleReset}/>
+      }
     </div>
   )
 };
