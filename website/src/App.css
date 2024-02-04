@@ -1,0 +1,57 @@
+.body {
+  margin: 0px;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+
+  height: 100vh;
+  width: 100vw;
+}
+
+.Terminal {
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 24px;
+
+  background-color: black;
+  color: greenyellow;
+
+  font-family: 'DM Sans', sans-serif;
+  font-family: 'Nunito', sans-serif;
+  font-family: 'VT323', monospace;
+  font-size: x-large;
+  letter-spacing: 0.1em;
+
+  text-align: left;
+
+  /* Get a closer Fo3 terminal look... */
+  /* transform: scale(1.2, 1); */
+}
+
+.data--container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.TerminalInput {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+input::before {
+  content: " >";
+}
+
+input {
+  all: unset;
+}
+
+.TerminalInput input {
+  width: 6em;
+  /* 6 = 12 characters; 6.5 = 13 chars (for custom cursor)*/
+  /* width: 6.5em;*/
+}
