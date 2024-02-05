@@ -5,20 +5,46 @@ import TerminalInput from './TerminalInput';
 import { getWords, generateDataStream } from './terminal-helpers';
 import TerminalLocked from './TerminalLocked';
 
-// The basics :)
+const LengthRange = [
+  {
+    low: 4,
+    high: 5
+  },
+  {
+    low: 6,
+    high: 8
+  },
+  {
+    low: 9,
+    high: 10
+  },
+  {
+    low: 11,
+    high: 12
+  },
+  {
+    low: 13,
+    high: 15
+  }
+];
 
 type TerminalProps = {
-  length: number,
+  onSuccess: () => void;
+  difficulty: number,
 }
 
-const Terminal: React.FC<TerminalProps> = () => {
+const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
   const [ key, setKey ] = useState<string>(String(Math.random()));
   const [ data, setData ] = useState<string>("");
   const [ words, setWords ] = useState<string[]>([]);
   const [ attempts, setAttempts ] = useState<number>(4);
+  const [ success, setSuccess ] = useState<boolean>(false);
 
   useEffect(() => {
-    const genWords = getWords(7, 7);
+    const range = LengthRange[difficulty];
+    const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
+
+    const genWords = getWords(length, 7);
     const genData = generateDataStream(genWords);
 
     setWords(genWords);
@@ -33,8 +59,27 @@ const Terminal: React.FC<TerminalProps> = () => {
     return words[Math.floor(Math.random() * (words.length - 1))];
   }, [words]);
 
+  useEffect(() => {
+
+    let shouldProceed = true;
+    if (success) {
+      setTimeout(() => {
+        if (shouldProceed) {
+          onSuccess();
+        }
+      }, 3000)
+    }
+
+    return () => { shouldProceed = false }
+  }, [success, onSuccess])
+
   const handleTerminalInput = (value: string): string[] => {
     const messages: string[] = [];
+
+    if (value === "$SUDO SETADMIN1") {
+      setSuccess(true);
+      return [];
+    }
 
     if (value.length !== password.length) {
       messages.push('Entry denied');
@@ -52,6 +97,7 @@ const Terminal: React.FC<TerminalProps> = () => {
         messages.push('Please wait');
         messages.push('while system');
         messages.push('is accessed.');
+        setSuccess(true);
       } else {
         messages.push('Entry denied');
         messages.push(`${matches}/${password.length} correct.`);
@@ -67,6 +113,7 @@ const Terminal: React.FC<TerminalProps> = () => {
     setWords([]);
     setData("");
     setKey(String(Math.random()));
+    setSuccess(false);
   };
 
   return (
@@ -78,7 +125,7 @@ const Terminal: React.FC<TerminalProps> = () => {
             <br/>
             <div className="data--container">
               <DataStream data={data} />
-              <TerminalInput onInput={handleTerminalInput}/>
+              <TerminalInput active={!success} onInput={handleTerminalInput}/>
             </div>
           </>
           : <TerminalLocked onReset={handleReset}/>

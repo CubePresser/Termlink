@@ -119,7 +119,7 @@ input {
 }
 
 .TerminalInput input {
-  width: 6em;
+  width: 7.5em;
   /* 6 = 12 characters; 6.5 = 13 chars (for custom cursor)*/
   /* width: 6.5em;*/
 }

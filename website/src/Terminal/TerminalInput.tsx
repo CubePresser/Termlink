@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 type TerminalInputProps = {
   // Accepts user input value and optionally returns list of messages to be added to history
   onInput: (value: string) => string[];
+  active: boolean;
 };
 
-const TerminalInput: React.FC<TerminalInputProps> = ({ onInput }) => {
+const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active }) => {
   const [ history, setHistory ] = useState<string[]>([]);
   const [ input, setInput ] = useState<string>("");
 
@@ -33,11 +34,12 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput }) => {
         &nbsp;{">"}
         <input
           autoFocus
-          maxLength={12}
+          maxLength={15}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           value={input}
+          disabled={!active}
         />
       </span>
       {

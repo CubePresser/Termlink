@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TerminalHeader from './TerminalHeader';
 import Menu from '../Menu/Menu';
 import MenuItem from '../Menu/MenuItem';
 
-enum Difficulty {
+export enum Difficulty {
   'Very Easy',
   'Easy',
   'Average',
@@ -11,15 +11,19 @@ enum Difficulty {
   'Very Hard',
 }
 
-const TerminalMenu: React.FC = () => {
-  const [ difficulty, setDifficulty ] = useState<Difficulty>(4)
+type TerminalMenuProps = {
+  onLogout: () => void;
+  onPwdReset: (n: number) => void;
+  difficulty: Difficulty;
+};
 
+const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, difficulty }) => {
   const handleLogout = () => {
-    
+    onLogout();
   };
 
   const handlePasswordReset = () => {
-    setDifficulty((difficulty + 1) % 5)
+    onPwdReset((difficulty + 1) % 5);
   }
 
   return (

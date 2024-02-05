@@ -32,7 +32,7 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
 }
 
 export const getWords = (length: number, count: number): string[] => {
-  const matchedWords = (wordbank as { [key: string]: string[] })[String(length)];
+  const matchedWords = (wordbank as { [key: number]: string[] })[length];
   if (matchedWords === undefined) {
     console.error('Failed to fetch any words of length: ', length);
     return [];
