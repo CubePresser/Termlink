@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import TermlinkHeader from './TermlinkHeader';
 import DataStream from './DataStream';
 import TerminalInput from './TerminalInput';
-import { getWords, generateDataStream } from './terminal-helpers';
+import { getWords, generateDataStream, findBrackets } from './terminal-helpers';
 import TerminalLocked from './TerminalLocked';
 
 const LengthRange = [
@@ -39,6 +39,8 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
   const [ words, setWords ] = useState<string[]>([]);
   const [ attempts, setAttempts ] = useState<number>(4);
   const [ success, setSuccess ] = useState<boolean>(false);
+  const [ brackets, setBrackets ] = useState<Map<number, string>>(new Map());
+  const [ usedBrackets, setUsedBrackets ] = useState<number[]>([]);
 
   useEffect(() => {
     const range = LengthRange[difficulty];
@@ -49,15 +51,13 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
 
     setWords(genWords);
     setData(genData);
-  }, [key]);
+  }, [key, difficulty]);
 
-  const password = useMemo<string>(() => {
-    if (words.length === 0) {
-      return "";
+  useEffect(() => {
+    if (data !== "") {
+      setBrackets(findBrackets(data))
     }
-
-    return words[Math.floor(Math.random() * (words.length - 1))];
-  }, [words]);
+  }, [data]);
 
   useEffect(() => {
 
@@ -71,7 +71,15 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     }
 
     return () => { shouldProceed = false }
-  }, [success, onSuccess])
+  }, [success, onSuccess]);
+
+  const password = useMemo<string>(() => {
+    if (words.length === 0) {
+      return "";
+    }
+
+    return words[Math.floor(Math.random() * (words.length - 1))];
+  }, [words]);
 
   const handleTerminalInput = (value: string): string[] => {
     const messages: string[] = [];
@@ -79,6 +87,37 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     if (value === "$SUDO SETADMIN1") {
       setSuccess(true);
       return [];
+    }
+
+    // Starts with '{' | '[' | '(' | '<'
+    if (/^[{([<]/.test(value)) {
+      for (let [key, val] of brackets.entries()) {
+        if (value === val) {
+          if (!usedBrackets.includes(key)) {
+            setUsedBrackets([...usedBrackets, key]);
+            const rand = Math.floor(Math.random() * 100);
+            if (rand < 80) {
+              // 80% chance to remove a dud
+              const duds = words.filter((word) => word !== password && data.includes(word));
+
+              // No more duds to remove
+              if (duds.length === 0) {
+                messages.push('Entry denied');
+              } else {
+                setData(data.replace(duds[Math.floor(Math.random() * (duds.length - 1))], '...............'.slice(0, duds[0].length)));
+                messages.push('Dud removed.');
+              }
+            } else {
+              // 20% chance to reset attempts
+              setAttempts(4);
+              messages.push('Allowance');
+              messages.push('replenished.');
+            }
+          }
+          
+          return messages;
+        }
+      }
     }
 
     if (value.length !== password.length) {

@@ -18,7 +18,11 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active }) => {
     if (event.key === "Enter") {
       const messages = onInput(input);
 
-      setHistory([...history, input, ...messages]);
+      const newHistory = [...history, input, ...messages];
+      // There is only enough room for 15 lines of history, lose the rest.
+      const trimmedHistory = newHistory.length > 15 ? newHistory.slice(-15) : newHistory;
+
+      setHistory(trimmedHistory);
       setInput("");
     }
   }
@@ -41,7 +45,7 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active }) => {
           value={input}
           disabled={!active}
         />
-      </span>
+      </span><br/>
       {
         history.map((line, idx) => (
           <span key={idx}>&nbsp;{">"}{line}</span>

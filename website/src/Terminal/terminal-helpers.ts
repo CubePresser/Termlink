@@ -76,3 +76,55 @@ export const generateDataStream = (words: string[]): string => {
 
   return data;
 }
+
+// Returns dictionary of matched bracket start indices mapped to their respective string representation
+// Each character index is allowed only ONE matched bracket sequence, ex: ("{...}.}" will yield only "{...}")
+export const findBrackets = (data: string): Map<number, string> => {
+  const pairs = {
+    '}': '{',
+    ']': '[',
+    ')': '(',
+    '>': '<'
+  };
+
+  let brackets = new Map<number, string>();
+
+  // Usable bracket pairs may only exist within a single row
+  for (let row = 0; row < 34; row++) {
+    const start = row * 12;
+    const segment = data.slice(start, start + 12);
+
+    // { 'open-bracket': index[] }
+    // Candidate list for an open-bracket is CLEARED and parsed whenever a closing tag is found
+    const candidates = new Map<string, number[]>();
+    for (let i = 0; i < 12; i++) {
+      const char = segment[i];
+      switch (char) {
+        case '{':
+        case '(':
+        case '[':
+        case '<':
+          const found = candidates.get(char) ?? [];
+          candidates.set(char, [...found, i]);
+          break;
+        case '}':
+        case ')':
+        case ']':
+        case '>':
+          const openers = candidates.get(pairs[char]) ?? [];
+          openers.forEach(open => brackets.set(open + start, segment.slice(open, i + 1)))
+          // All matched previous opening brackets have been closed, remove their positions from candidates
+          candidates.set(pairs[char], []);
+          break;
+        default:
+          // If a letter is encountered, all previous candidates become invalid for matching
+          // Brackets are not allowed to match if there is a word in between them
+          if (/[A-Za-z]/.test(char)) {
+            candidates.clear();
+          }
+      }
+    }
+  }
+
+  return brackets;
+};
