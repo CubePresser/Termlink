@@ -1,42 +1,87 @@
 import React, { useMemo } from 'react';
+import Char from '../Data/Char';
 
 type DataStreamProps = {
   data: string;
+  brackets: Map<number, string>;
+  usedBrackets: number[];
+  wordLength: number;
+  onSelect: (value: string) => void;
 };
 
-const DataStream: React.FC<DataStreamProps> = ({data}) => {
-  const lines: React.ReactNode[] = useMemo(() => {
+const DataStream: React.FC<DataStreamProps> = ({
+  data,
+  brackets,
+  usedBrackets,
+  wordLength,
+  onSelect
+}) => {
+  const chars: React.ReactNode[] = useMemo(() => {
     const fragments: React.ReactNode[] = [];
 
-    // TODO: Randomize
-    // Iterate addr by 12 for each line
+    const renderBrackets = (start: number, value: string): [React.ReactNode, number] => {
+      const result: React.ReactNode[] = [];
+      
+      let finalIdx = (value.length - 1) + start;
+      for (let i = start; i < value.length + start; i++) {
+        if (i !== start && brackets.has(i) && !usedBrackets.includes(i)) {
+          const [renderedBrackets, newIdx] = renderBrackets(i, brackets.get(i) ?? '');
+          result.push(renderedBrackets);
+          if (newIdx > finalIdx) {
+            finalIdx = newIdx;
+            break;
+          } else {
+            i = newIdx;
+          }
+        } else {
+          const char = data[i];
+          result.push(<Char key={`${char}-${i}`} value={char} onHover={() => i === start ? onSelect(value) : onSelect(char)} />)
+        }
+      }
+
+      return [(
+        <span className="Bracket" key={`bracket-${start}`}>{result}</span>
+      ), finalIdx];
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      // Found a word
+      if (data[i].match(/[A-Za-z]/)) {
+        const word = data.slice(i, i + wordLength);
+        fragments.push(
+          <Char key={word} value={word} onHover={() => onSelect(word)}/>
+        );
+        i += wordLength - 1;
+      } else if (brackets.has(i) && !usedBrackets.includes(i)) {
+        const bracket = brackets.get(i) ?? '';
+        const [ renderedBrackets, newIdx ] = renderBrackets(i, bracket);
+        fragments.push(renderedBrackets)
+        i = newIdx;
+      } else {
+        const char = data[i];
+        fragments.push(
+          <Char key={`${char}-${i}`} value={char} onHover={() => onSelect(char)}/>
+        );
+      }
+    }
+    return fragments;
+  }, [data, wordLength, brackets, usedBrackets, onSelect]);
+
+  const addresses: string = useMemo(() => {
+    let fragments: string = "";
+    
     const addr = 0xF964;
-
-    // Two columns to print, one row at a time means I need characters at: Col1 = n, Col2 = n + 204 where n iterates by 12
-    for (let row = 0; row < 17; row++) {
-      const start_c1 = row * 12;
-      const start_c2 = start_c1 + 204;
-
-      const addr1 = `0x${(addr + start_c1).toString(16).toUpperCase()}`;
-      const addr2 = `0x${(addr + start_c2).toString(16).toUpperCase()}`;
-
-      fragments.push(
-        <span key={`${addr1}-${addr2}`}>
-          <span className="address">{addr1} </span>
-          <span className="data">{data.slice(start_c1, start_c1 + 12)} </span>
-          <span className="address">{addr2} </span>
-          <span className="data">{data.slice(start_c2, start_c2 + 12)}</span>
-          <br/>
-        </span>
-      );
+    for (let row = 0; row < 34; row++) {
+      fragments += `0x${(addr + (row * 12)).toString(16).toUpperCase()}`;
     }
 
     return fragments;
-  }, [data]);
+  }, []);
 
   return (
     <div className="DataStream">
-      {lines}
+      <div className="address-stream">{addresses}</div>
+      <div className="data-stream">{chars}</div>
     </div>
   );
 }

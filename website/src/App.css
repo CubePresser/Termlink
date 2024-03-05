@@ -123,3 +123,114 @@ input {
   /* 6 = 12 characters; 6.5 = 13 chars (for custom cursor)*/
   /* width: 6.5em;*/
 }
+
+
+.test-para {
+  width: 12em;
+  word-wrap: break-word;
+  column-count: 2;
+  column-width: 19em;
+  column-gap: 1em;
+}
+
+.test-datastream {
+  max-width: 19.5em;
+  max-height: 2em;
+
+  column-count: 2;
+  column-width: 6em;
+  column-gap: 0.5em;
+}
+
+.test-datastream2 {
+  position: fixed;
+  max-width: 16em;
+  top: 24em;
+  max-height: 2em;
+  column-count: 2;
+  /* column-width: 6em; */
+  word-break: break-word;
+  column-gap: 4em;
+  margin-left: 3.5em;
+  line-height: 1em;
+}
+
+.test-datastream2 span:hover:not(.brak-wrap) {
+  background-color: greenyellow;
+  color: black;
+  cursor: pointer;
+}
+
+.test-addrstream {
+  max-width: 19.5em;
+  max-height: 2em;
+
+  column-count: 2;
+  column-width: 6em;
+  column-gap: 0.5em;
+}
+
+.test-addrstream2 {
+  position: fixed;
+  top: 24em;
+  max-width: 13em;
+  max-height: 2em;
+  column-count: 2;
+  column-width: 3em;
+  column-gap: 7em;
+  word-break: break-word;
+  line-height: 1em;
+  /* column-rule: 1px solid; */
+}
+
+.test-focus:hover {
+  background-color: greenyellow;
+  color: black;
+}
+
+.brak-wrap:has(.bracket:hover) {
+  background-color: greenyellow;
+  color: black;
+}
+
+.DataStream {
+  display: grid;
+}
+
+.DataStream > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  cursor: default;
+}
+
+.data-stream {
+  max-width: 16em;
+  max-height: 17em;
+  column-count: 2;
+  word-break: break-all;
+  line-break: anywhere;
+  column-gap: 4em;
+  margin-left: 3.5em;
+  line-height: 1em;
+}
+
+.address-stream {
+  max-width: 13em;
+  max-height: 17em;
+  column-count: 2;
+  column-width: 3em;
+  column-gap: 7em;
+  word-break: break-word;
+  line-height: 1em;
+}
+
+.Char:hover {
+  background-color: greenyellow;
+  color: black;
+  cursor: pointer;
+}
+
+.Bracket:has(> .Char:first-child:hover) {
+  background-color: greenyellow;
+  color: black;
+}

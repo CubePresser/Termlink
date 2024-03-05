@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 type TerminalInputProps = {
   // Accepts user input value and optionally returns list of messages to be added to history
   onInput: (value: string) => string[];
   active: boolean;
+  value?: string;
 };
 
-const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active }) => {
+const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value }) => {
   const [ history, setHistory ] = useState<string[]>([]);
   const [ input, setInput ] = useState<string>("");
+
+  useEffect(() => {
+    setInput(value ?? "");
+  }, [value])
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInput(event.target.value.toUpperCase());

@@ -39,8 +39,8 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
   const [ words, setWords ] = useState<string[]>([]);
   const [ attempts, setAttempts ] = useState<number>(4);
   const [ success, setSuccess ] = useState<boolean>(false);
-  const [ brackets, setBrackets ] = useState<Map<number, string>>(new Map());
   const [ usedBrackets, setUsedBrackets ] = useState<number[]>([]);
+  const [ selection, setSelection ] = useState<string>('');
 
   useEffect(() => {
     const range = LengthRange[difficulty];
@@ -52,12 +52,6 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     setWords(genWords);
     setData(genData);
   }, [key, difficulty]);
-
-  useEffect(() => {
-    if (data !== "") {
-      setBrackets(findBrackets(data))
-    }
-  }, [data]);
 
   useEffect(() => {
 
@@ -72,6 +66,14 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
 
     return () => { shouldProceed = false }
   }, [success, onSuccess]);
+
+  const brackets: Map<number, string> = useMemo(() => {
+    if (data !== "") {
+      return findBrackets(data);
+    }
+
+    return new Map();
+  }, [data]);
 
   const password = useMemo<string>(() => {
     if (words.length === 0) {
@@ -155,6 +157,10 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     setSuccess(false);
   };
 
+  const handleDataSelect = (value: string) => {
+    setSelection(value);
+  }
+
   return (
     <div className="Terminal">
       {
@@ -163,8 +169,13 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
             <TermlinkHeader attempts={attempts} />
             <br/>
             <div className="data--container">
-              <DataStream data={data} />
-              <TerminalInput active={!success} onInput={handleTerminalInput}/>
+              <DataStream
+                data={data}
+                brackets={brackets}
+                usedBrackets={usedBrackets}
+                wordLength={password.length}
+                onSelect={handleDataSelect}/>
+              <TerminalInput active={!success} onInput={handleTerminalInput} value={selection}/>
             </div>
           </>
           : <TerminalLocked onReset={handleReset}/>
