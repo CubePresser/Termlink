@@ -38,6 +38,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
   const [ data, setData ] = useState<string>("");
   const [ words, setWords ] = useState<string[]>([]);
   const [ attempts, setAttempts ] = useState<number>(4);
+  const [ history, setHistory ] = useState<string[]>([]);
   const [ success, setSuccess ] = useState<boolean>(false);
   const [ usedBrackets, setUsedBrackets ] = useState<number[]>([]);
   const [ selection, setSelection ] = useState<string>('');
@@ -83,12 +84,20 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     return words[Math.floor(Math.random() * (words.length - 1))];
   }, [words]);
 
-  const handleTerminalInput = (value: string): string[] => {
+  const addToHistory = (messages: string[], value: string): void => {
+    const newHistory = [...history, value, ...messages];
+    // There is only enough room for 15 lines of history, lose the rest.
+    const trimmedHistory = newHistory.length > 15 ? newHistory.slice(-15) : newHistory;
+
+    setHistory(trimmedHistory);
+  };
+
+  const handleTerminalInput = (value: string): void => {
     const messages: string[] = [];
 
     if (value === "$SUDO SETADMIN1") {
       setSuccess(true);
-      return [];
+      return;
     }
 
     // Starts with '{' | '[' | '(' | '<'
@@ -117,7 +126,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
             }
           }
           
-          return messages;
+          return addToHistory(messages, value);
         }
       }
     }
@@ -146,7 +155,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
       }
     }
 
-    return messages;
+    return addToHistory(messages, value);
   };
 
   const handleReset = () => {
@@ -155,6 +164,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     setData("");
     setKey(String(Math.random()));
     setSuccess(false);
+    setHistory([]);
   };
 
   const handleDataSelect = (value: string) => {
@@ -174,8 +184,10 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
                 brackets={brackets}
                 usedBrackets={usedBrackets}
                 wordLength={password.length}
-                onSelect={handleDataSelect}/>
-              <TerminalInput active={!success} onInput={handleTerminalInput} value={selection}/>
+                onSelect={handleDataSelect}
+                onClick={() => handleTerminalInput(selection)}
+              />
+              <TerminalInput active={!success} onInput={handleTerminalInput} value={selection} history={history}/>
             </div>
           </>
           : <TerminalLocked onReset={handleReset}/>

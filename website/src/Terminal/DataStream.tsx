@@ -7,6 +7,7 @@ type DataStreamProps = {
   usedBrackets: number[];
   wordLength: number;
   onSelect: (value: string) => void;
+  onClick: () => void;
 };
 
 const DataStream: React.FC<DataStreamProps> = ({
@@ -14,7 +15,8 @@ const DataStream: React.FC<DataStreamProps> = ({
   brackets,
   usedBrackets,
   wordLength,
-  onSelect
+  onSelect,
+  onClick
 }) => {
   const chars: React.ReactNode[] = useMemo(() => {
     const fragments: React.ReactNode[] = [];
@@ -35,7 +37,7 @@ const DataStream: React.FC<DataStreamProps> = ({
           }
         } else {
           const char = data[i];
-          result.push(<Char key={`${char}-${i}`} value={char} onHover={() => i === start ? onSelect(value) : onSelect(char)} />)
+          result.push(<Char key={`${char}-${i}`} value={char} onHover={() => i === start ? onSelect(value) : onSelect(char)} onLeave={() => onSelect('')} onClick={onClick}/>)
         }
       }
 
@@ -49,7 +51,7 @@ const DataStream: React.FC<DataStreamProps> = ({
       if (data[i].match(/[A-Za-z]/)) {
         const word = data.slice(i, i + wordLength);
         fragments.push(
-          <Char key={word} value={word} onHover={() => onSelect(word)}/>
+          <Char key={word} value={word} onHover={() => onSelect(word)} onLeave={() => onSelect('')} onClick={onClick}/>
         );
         i += wordLength - 1;
       } else if (brackets.has(i) && !usedBrackets.includes(i)) {
@@ -60,7 +62,7 @@ const DataStream: React.FC<DataStreamProps> = ({
       } else {
         const char = data[i];
         fragments.push(
-          <Char key={`${char}-${i}`} value={char} onHover={() => onSelect(char)}/>
+          <Char key={`${char}-${i}`} value={char} onHover={() => onSelect(char)} onLeave={() => onSelect('')} onClick={onClick}/>
         );
       }
     }

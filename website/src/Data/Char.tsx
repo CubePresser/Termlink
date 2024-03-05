@@ -3,6 +3,8 @@ import React from 'react';
 type CharProps = {
   disabled?: boolean;
   onHover: (data: string) => void;
+  onLeave: () => void;
+  onClick: () => void;
   value: string;
 }
 
@@ -10,6 +12,8 @@ const Char: React.FC<CharProps> = ({
   disabled,
   onHover,
   value,
+  onLeave,
+  onClick
 }) => {
   const handleHover = () => {
     if (disabled) {
@@ -20,7 +24,7 @@ const Char: React.FC<CharProps> = ({
   }
 
   return (
-    <span className="Char" onMouseOver={handleHover}>{value}</span>
+    <span className="Char" onMouseOver={handleHover} onMouseLeave={onLeave} onClick={onClick}>{value}</span>
   );
 };
 

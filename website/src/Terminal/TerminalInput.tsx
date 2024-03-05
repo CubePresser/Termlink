@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 type TerminalInputProps = {
-  // Accepts user input value and optionally returns list of messages to be added to history
-  onInput: (value: string) => string[];
+  onInput: (value: string) => void;
+  history: string[];
   active: boolean;
   value?: string;
 };
 
-const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value }) => {
-  const [ history, setHistory ] = useState<string[]>([]);
+const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
 
   useEffect(() => {
@@ -21,13 +20,7 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value })
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
-      const messages = onInput(input);
-
-      const newHistory = [...history, input, ...messages];
-      // There is only enough room for 15 lines of history, lose the rest.
-      const trimmedHistory = newHistory.length > 15 ? newHistory.slice(-15) : newHistory;
-
-      setHistory(trimmedHistory);
+      onInput(input);
       setInput("");
     }
   }
