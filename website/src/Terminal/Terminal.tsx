@@ -185,6 +185,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
                 brackets={brackets}
                 usedBrackets={usedBrackets}
                 wordLength={password.length}
+                active={!success}
                 onSelect={handleDataSelect}
                 onClick={() => handleTerminalInput(selection)}
               />

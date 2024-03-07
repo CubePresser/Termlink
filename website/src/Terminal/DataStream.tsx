@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import Char from '../Data/Char';
 
 type DataStreamProps = {
@@ -6,6 +6,7 @@ type DataStreamProps = {
   brackets: Map<number, string>;
   usedBrackets: number[];
   wordLength: number;
+  active: boolean;
   onSelect: (value: string) => void;
   onClick: () => void;
 };
@@ -15,9 +16,24 @@ const DataStream: React.FC<DataStreamProps> = ({
   brackets,
   usedBrackets,
   wordLength,
+  active,
   onSelect,
   onClick
 }) => {
+  const renderChar = useCallback((key: string, display: string, value?: string) => {
+    const val = value ?? display;
+
+    if (active) {
+      return (
+        <Char key={key} value={display} onHover={() => onSelect(val)} onLeave={() => onSelect('')} onClick={onClick}/>
+      )
+    } else {
+      return (
+        <Char key={key} value={display} onHover={() => void(0)} onLeave={() => void(0)} onClick={() => void(0)}/>
+      );
+    }
+  }, [onSelect, onClick, active])
+
   const chars: React.ReactNode[] = useMemo(() => {
     const fragments: React.ReactNode[] = [];
 
@@ -37,7 +53,7 @@ const DataStream: React.FC<DataStreamProps> = ({
           }
         } else {
           const char = data[i];
-          result.push(<Char key={`${char}-${i}`} value={char} onHover={() => i === start ? onSelect(value) : onSelect(char)} onLeave={() => onSelect('')} onClick={onClick}/>)
+          result.push(renderChar(`${char}-${i}`, char, i === start ? value : char));
         }
       }
 
@@ -51,7 +67,7 @@ const DataStream: React.FC<DataStreamProps> = ({
       if (data[i].match(/[A-Za-z]/)) {
         const word = data.slice(i, i + wordLength);
         fragments.push(
-          <Char key={word} value={word} onHover={() => onSelect(word)} onLeave={() => onSelect('')} onClick={onClick}/>
+          renderChar(word, word)
         );
         i += wordLength - 1;
       } else if (brackets.has(i) && !usedBrackets.includes(i)) {
@@ -62,12 +78,12 @@ const DataStream: React.FC<DataStreamProps> = ({
       } else {
         const char = data[i];
         fragments.push(
-          <Char key={`${char}-${i}`} value={char} onHover={() => onSelect(char)} onLeave={() => onSelect('')} onClick={onClick}/>
+          renderChar(`${char}-${i}`, char)
         );
       }
     }
     return fragments;
-  }, [data, wordLength, brackets, usedBrackets, onSelect, onClick]);
+  }, [data, wordLength, brackets, usedBrackets, renderChar]);
 
   const addresses: string = useMemo(() => {
     let fragments: string = "";
@@ -83,7 +99,7 @@ const DataStream: React.FC<DataStreamProps> = ({
   return (
     <div className="DataStream">
       <div className="address-stream">{addresses}</div>
-      <div className="data-stream">{chars}</div>
+      <div className={`data-stream ${active ? '' : 'disabled'}`}>{chars}</div>
     </div>
   );
 }

@@ -155,13 +155,16 @@ input {
   line-height: 1em;
 }
 
-.Char:hover {
-  background-color: greenyellow;
-  color: black;
+.Char {
   cursor: pointer;
 }
 
-.Bracket:has(> .Char:first-child:hover) {
+.data-stream:not(.disabled) .Char:hover {
+  background-color: greenyellow;
+  color: black;
+}
+
+.data-stream:not(.disabled) .Bracket:has(> .Char:first-child:hover) {
   background-color: greenyellow;
   color: black;
 }
