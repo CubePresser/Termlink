@@ -67,7 +67,7 @@ const DataStream: React.FC<DataStreamProps> = ({
       }
     }
     return fragments;
-  }, [data, wordLength, brackets, usedBrackets, onSelect]);
+  }, [data, wordLength, brackets, usedBrackets, onSelect, onClick]);
 
   const addresses: string = useMemo(() => {
     let fragments: string = "";

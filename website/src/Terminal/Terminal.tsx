@@ -165,6 +165,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     setKey(String(Math.random()));
     setSuccess(false);
     setHistory([]);
+    setSelection("");
   };
 
   const handleDataSelect = (value: string) => {
