@@ -136,18 +136,35 @@ button {
   flex-direction: column-reverse;
 }
 
-input::before {
-  content: " >";
-}
-
 input {
   all: unset;
 }
 
 .TerminalInput input {
   width: 7.5em;
+  caret-color: transparent;
   /* 6 = 12 characters; 6.5 = 13 chars (for custom cursor)*/
   /* width: 6.5em;*/
+}
+
+.input--line {
+  position: relative;
+}
+
+.TerminalInput .input--caret {
+  animation: blink-animation 0.75s steps(2, start) infinite;
+
+  position: absolute;
+  bottom: 0;
+}
+
+@keyframes blink-animation {
+  start {
+    visibility: visible;
+  }
+  to {
+    visibility: hidden;
+  }
 }
 
 .DataStream {

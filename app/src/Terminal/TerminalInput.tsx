@@ -32,7 +32,7 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
 
   return (
     <div className="TerminalInput">
-      <span>
+      <span className="input--line">
         &nbsp;{">"}
         <input
           autoFocus
@@ -43,6 +43,13 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
           value={input}
           disabled={!active}
         />
+        <span
+          className="input--caret"
+          style={{
+            left: `${1 + (0.5 * input.length)}em`
+          }}>
+            ■
+        </span>
       </span><br/>
       {
         history.map((line, idx) => (
