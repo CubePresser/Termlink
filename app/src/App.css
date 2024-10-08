@@ -152,19 +152,10 @@ input {
 }
 
 .TerminalInput .input--caret {
-  animation: blink-animation 0.75s steps(2, start) infinite;
+  animation: blink 0.5s step-start infinite;
 
   position: absolute;
   bottom: 0;
-}
-
-@keyframes blink-animation {
-  start {
-    visibility: visible;
-  }
-  to {
-    visibility: hidden;
-  }
 }
 
 .DataStream {

@@ -9,18 +9,54 @@ type TerminalInputProps = {
 
 const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
+  const [ intervalId, setIntervalId ] = useState<NodeJS.Timer | null>(null);
 
+  // Value changes when the cursor is used to select from the datastream
   useEffect(() => {
-    setInput(value ?? "");
-  }, [value])
+    if (value !== null && value !== undefined) {
+      let count = 1;
+      // Using a var so I can cancel the interval from within itself feels so wrong but so right??
+      var interval = setInterval(() => {
+        setInput(value.slice(0, count));
+        if (count >= value.length) {
+          clearInterval(interval);
+        }
+
+        count++;
+      }, 50);
+      setIntervalId(interval);
+
+      return () => {
+        clearInterval(interval);
+        setIntervalId(null);
+      }
+    } else {
+      setInput("");
+      setIntervalId(null);
+    }
+  }, [value]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+
     setInput(event.target.value.toUpperCase());
   };
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    let submit = input;
+
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+      setInput(value ?? "");
+      submit = value ?? "";
+    }
+
     if (event.key === "Enter") {
-      onInput(input);
+      onInput(submit);
       setInput("");
     }
   }
