@@ -5,10 +5,6 @@ permissions:
   pages: write
   id-token: write
 
-defaults:
-  run:
-    working-directory: ./app
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,3 +13,4 @@ jobs:
       uses: bitovi/github-actions-react-to-github-pages@v1.2.4
       with:
         path: build
+        install_command: cd app; npm ci
