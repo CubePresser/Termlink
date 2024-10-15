@@ -47,7 +47,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     const range = LengthRange[difficulty];
     const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
 
-    const genWords = getWords(length, 7);
+    const genWords = getWords(length, 14);
     const genData = generateDataStream(genWords);
 
     setWords(genWords);

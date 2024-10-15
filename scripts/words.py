@@ -2,7 +2,7 @@ import json
 
 dictionary = {}
 
-with open(r"dictionary_test.txt") as openfile:
+with open(r"dictionary.txt") as openfile:
   for word in openfile:
     strWord = word.strip()
     length = len(strWord)
