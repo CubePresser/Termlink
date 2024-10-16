@@ -21,7 +21,7 @@ const Menu: React.FC<MenuProps> = ({
     }
   }
 
-  const handleFocus = (event: React.FocusEvent<HTMLButtonElement>, idx: number) => {
+  const handleFocus = (_event: React.FocusEvent<HTMLButtonElement>, idx: number) => {
     setIndex(idx);
   }
 
