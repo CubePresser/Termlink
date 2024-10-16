@@ -14,3 +14,4 @@ jobs:
       with:
         path: app/build
         install_command: cd app; npm ci
+        build_command: npm run build
