@@ -9,7 +9,7 @@ type TerminalInputProps = {
 
 const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
-  const [ intervalId, setIntervalId ] = useState<NodeJS.Timer | null>(null);
+  const [ intervalId, setIntervalId ] = useState<NodeJS.Timeout | null>(null);
 
   // Value changes when the cursor is used to select from the datastream
   useEffect(() => {
