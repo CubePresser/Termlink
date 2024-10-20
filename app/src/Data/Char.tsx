@@ -19,17 +19,17 @@ const Char: React.FC<CharProps> = ({
     onHover(value);
   }
 
-  const handlePointerDown: React.PointerEventHandler<HTMLSpanElement> = (event) => {
+  const handlePointerDown: React.PointerEventHandler<HTMLSpanElement> = () => {
     setPressed(true);
   };
 
-  const handlePointerCancel: React.PointerEventHandler<HTMLSpanElement> = (event) => {
+  const handlePointerCancel: React.PointerEventHandler<HTMLSpanElement> = () => {
     if (pressed) {
       setPressed(false);
     }
   }
 
-  const handlePointerLeave: React.PointerEventHandler<HTMLSpanElement> = (event) => {
+  const handlePointerLeave: React.PointerEventHandler<HTMLSpanElement> = () => {
     if (pressed) {
       setPressed(false);
     }
