@@ -196,6 +196,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
                   <TerminalInput active={!success} onInput={handleTerminalInput} value={selection} history={history}/>
                 </>
                 // TODO: Something better than this :)
+                // Loading Screen
                 : <span style={{ width: '28em' }}/>
               }
               
