@@ -199,8 +199,9 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
                 // Loading Screen
                 : <span style={{ width: '28em' }}/>
               }
-              
             </div>
+            <br/>
+            <button id='enter' onClick={() => handleTerminalInput(selection)}>{'[ ENTER ]'}</button>
           </>
           : <TerminalLocked onReset={handleReset}/>
       }
