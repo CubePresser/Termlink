@@ -1,5 +1,3 @@
-import wordbank from './dictionary.json';
-
 const randomBucket = ['!','"','#','$','%','&','\'','(',')','*','+',',','-','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~',];
 
 const findWordSlots = (data: string, size: number, padding = 2): number[] => {
@@ -31,8 +29,9 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
   return slots;
 }
 
-export const getWords = (length: number, count: number): string[] => {
-  const matchedWords = (wordbank as { [key: number]: string[] })[length];
+export const getWords = async (length: number, count: number): Promise<string[]> => {
+  const wordbank = await import('./dictionary.json');
+  const matchedWords = (wordbank.default as { [key: number]: string[] })[length];
   if (matchedWords === undefined) {
     console.error('Failed to fetch any words of length: ', length);
     return [];

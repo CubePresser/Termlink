@@ -47,11 +47,12 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     const range = LengthRange[difficulty];
     const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
 
-    const genWords = getWords(length, 14);
-    const genData = generateDataStream(genWords);
-
-    setWords(genWords);
-    setData(genData);
+    // TODO: Provide options for setting # of words generated
+    getWords(length, 14).then((genWords) => {
+      const genData = generateDataStream(genWords);
+      setWords(genWords);
+      setData(genData);
+    });
   }, [key, difficulty]);
 
   useEffect(() => {
@@ -180,16 +181,24 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
             <TermlinkHeader attempts={attempts} />
             <br/>
             <div className="data--container">
-              <DataStream
-                data={data}
-                brackets={brackets}
-                usedBrackets={usedBrackets}
-                wordLength={password.length}
-                active={!success}
-                onSelect={handleDataSelect}
-                onClick={() => handleTerminalInput(selection)}
-              />
-              <TerminalInput active={!success} onInput={handleTerminalInput} value={selection} history={history}/>
+              {
+                data !== "" ?
+                <>
+                  <DataStream
+                    data={data}
+                    brackets={brackets}
+                    usedBrackets={usedBrackets}
+                    wordLength={password.length}
+                    active={!success}
+                    onSelect={handleDataSelect}
+                    onClick={() => handleTerminalInput(selection)}
+                  />
+                  <TerminalInput active={!success} onInput={handleTerminalInput} value={selection} history={history}/>
+                </>
+                // TODO: Something better than this :)
+                : <span style={{ width: '28em' }}/>
+              }
+              
             </div>
           </>
           : <TerminalLocked onReset={handleReset}/>
