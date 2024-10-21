@@ -14,16 +14,22 @@ export enum Difficulty {
 type TerminalMenuProps = {
   onLogout: () => void;
   onPwdReset: (n: number) => void;
+  onUpdateCount: (n: number) => void;
   difficulty: Difficulty;
+  wordcount: number;
 };
 
-const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, difficulty }) => {
+const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, onUpdateCount, difficulty, wordcount }) => {
   const handleLogout = () => {
     onLogout();
   };
 
   const handlePasswordReset = () => {
     onPwdReset((difficulty + 1) % 5);
+  }
+
+  const handleIncrementCount = () => {
+    onUpdateCount((wordcount % 50) + 1);
   }
 
   return (
@@ -36,6 +42,7 @@ const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, diffi
       <Menu className="TerminalMenu--items">
         <MenuItem autoFocus onClick={handleLogout}>{"> LOG OUT"}</MenuItem>
         <MenuItem onClick={handlePasswordReset}>{`> RESET PASSWORD [Strength: ${Difficulty[difficulty]}]`}</MenuItem>
+        <MenuItem onClick={handleIncrementCount}>{`> MEMORY SLOTS [${wordcount}]`}</MenuItem>
       </Menu>
       <br/>
     </div>

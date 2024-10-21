@@ -30,6 +30,10 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
 }
 
 export const getWords = async (length: number, count: number): Promise<string[]> => {
+  if (count < 0) {
+    console.error('word count cannot be less than 0');
+  }
+
   const wordbank = await import('./dictionary.json');
   const matchedWords = (wordbank.default as { [key: number]: string[] })[length];
   if (matchedWords === undefined) {

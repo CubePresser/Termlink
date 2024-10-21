@@ -31,9 +31,10 @@ const LengthRange = [
 type TerminalProps = {
   onSuccess: () => void;
   difficulty: number,
+  wordcount: number,
 }
 
-const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
+const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcount = 14 }) => {
   const [ key, setKey ] = useState<string>(String(Math.random()));
   const [ data, setData ] = useState<string>("");
   const [ words, setWords ] = useState<string[]>([]);
@@ -48,7 +49,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty }) => {
     const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
 
     // TODO: Provide options for setting # of words generated
-    getWords(length, 14).then((genWords) => {
+    getWords(length, wordcount).then((genWords) => {
       const genData = generateDataStream(genWords);
       setWords(genWords);
       setData(genData);

@@ -7,9 +7,16 @@ const App: React.FC = () => {
   // Could probably use react router for something like this buuuut.... NAAAAHHH
   const [ pageIdx, setPageIdx ] = useState(0);
   const [ difficulty, setDifficulty ] = useState<Difficulty>(2);
+  const [ wordcount, setWordcount ] = useState<number>(10);
   const pages: React.ReactNode[] = [
-    <Terminal onSuccess={() => setPageIdx(1)} difficulty={difficulty}/>,
-    <TerminalMenu onLogout={() => setPageIdx(0)} difficulty={difficulty} onPwdReset={(n) => setDifficulty(n)}/>
+    <Terminal onSuccess={() => setPageIdx(1)} difficulty={difficulty} wordcount={wordcount}/>,
+    <TerminalMenu
+      onLogout={() => setPageIdx(0)}
+      difficulty={difficulty}
+      wordcount={wordcount}
+      onPwdReset={(n) => setDifficulty(n)}
+      onUpdateCount={(n) => setWordcount(n)}
+    />
   ]
 
   return (
