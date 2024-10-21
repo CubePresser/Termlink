@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Terminal from './Terminal/Terminal';
 import TerminalMenu, { Difficulty } from './Terminal/TerminalMenu';
+import InputDeviceProvider from './Hooks/InputDevice';
 
 const App: React.FC = () => {
   // Could probably use react router for something like this buuuut.... NAAAAHHH
@@ -21,7 +22,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      {pages[pageIdx]}
+      <InputDeviceProvider>
+        {pages[pageIdx]}
+      </InputDeviceProvider>
     </div>
   );
 }

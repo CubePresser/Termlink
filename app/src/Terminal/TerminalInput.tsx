@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { InputDeviceContext } from '../Hooks/InputDevice';
 
 type TerminalInputProps = {
   onInput: (value: string) => void;
@@ -10,6 +11,8 @@ type TerminalInputProps = {
 const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
   const [ intervalId, setIntervalId ] = useState<NodeJS.Timeout | null>(null);
+
+  const { isMouse } = useContext(InputDeviceContext);
 
   // Value changes when the cursor is used to select from the datastream
   useEffect(() => {
@@ -70,6 +73,10 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
   }
 
   const handleEnterSubmit = () => {
+    if (!active) {
+      return;
+    }
+
     let submit = input;
 
     if (intervalId) {
@@ -84,7 +91,11 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
 
   return (
     <div className="TerminalInput">
-      <button id='enter' onClick={handleEnterSubmit}>{'[ ENTER ]'}</button>
+      {
+        !isMouse
+          ? <button id='enter' onClick={handleEnterSubmit}>{'[ ENTER ]'}</button>
+          : null
+      }
       <span className="input--line">
         &nbsp;{">"}
         <input
