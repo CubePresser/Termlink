@@ -48,7 +48,6 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
     const range = LengthRange[difficulty];
     const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
 
-    // TODO: Provide options for setting # of words generated
     getWords(length, wordcount).then((genWords) => {
       const genData = generateDataStream(genWords);
       setWords(genWords);
@@ -202,7 +201,6 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
               }
             </div>
             <br/>
-            <button id='enter' onClick={() => handleTerminalInput(selection)}>{'[ ENTER ]'}</button>
           </>
           : <TerminalLocked onReset={handleReset}/>
       }

@@ -23,13 +23,24 @@ const DataStream: React.FC<DataStreamProps> = ({
   const renderChar = useCallback((key: string, display: string, value?: string) => {
     const val = value ?? display;
 
+    const handleHover = () => onSelect(val);
+    
+    const handleLeave = () => {
+      // TODO: Replace with hook?
+      if (navigator.maxTouchPoints === 0) {
+        onSelect('');
+      }
+    }
+
+    const none = () => void(0);
+
     if (active) {
       return (
-        <Char key={key} value={display} onHover={() => onSelect(val)} onLeave={() => onSelect('')} onClick={onClick}/>
+        <Char key={key} value={display} onHover={handleHover} onLeave={handleLeave} onClick={onClick}/>
       )
     } else {
       return (
-        <Char key={key} value={display} onHover={() => void(0)} onLeave={() => void(0)} onClick={() => void(0)}/>
+        <Char key={key} value={display} onHover={none} onLeave={none} onClick={none}/>
       );
     }
   }, [onSelect, onClick, active])

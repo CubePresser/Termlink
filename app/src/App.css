@@ -62,10 +62,11 @@ body::after {
 }
 
 #enter {
+  position: absolute;
+  bottom: -2em;
+  left: 2em;
   cursor: pointer;
   width: fit-content;
-
-  margin-left: 21.5em;
 }
 
 #enter:active {
@@ -177,6 +178,7 @@ button {
 }
 
 .TerminalInput {
+  position: relative;
   display: flex;
   flex-direction: column-reverse;
 }

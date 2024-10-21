@@ -51,8 +51,8 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
     if (intervalId) {
       clearInterval(intervalId);
       setIntervalId(null);
-      setInput(value ?? "");
       submit = value ?? "";
+      setInput(submit);
     }
 
     if (event.key === "Enter") {
@@ -63,11 +63,28 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
 
   // Always keep this input in focus (Is there a better way to do this?)
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
-    event.target.focus();
+    // TODO: Put this into a reusable hook?
+    if (navigator.maxTouchPoints === 0) {
+      event.target.focus();
+    }
   }
+
+  const handleEnterSubmit = () => {
+    let submit = input;
+
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+      submit = value ?? "";
+    }
+
+    onInput(submit);
+    setInput("");
+  };
 
   return (
     <div className="TerminalInput">
+      <button id='enter' onClick={handleEnterSubmit}>{'[ ENTER ]'}</button>
       <span className="input--line">
         &nbsp;{">"}
         <input
