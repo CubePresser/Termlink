@@ -10,6 +10,8 @@ body {
   background-image: radial-gradient(
     rgba(83, 117, 32, 0.5), black 80%
   );
+
+  /* Reported issue regarding spacing on Safari when using text-shadow with column-count: https://developer.apple.com/forums/thread/766755 */
   text-shadow: 0 0 4px greenyellow;
 }
 
@@ -214,7 +216,6 @@ input {
 
 .data-stream {
   width: 16em;
-  height: 17em;
   column-count: 2;
   word-break: break-all;
   line-break: anywhere;
@@ -225,7 +226,6 @@ input {
 
 .address-stream {
   max-width: 13em;
-  max-height: 17em;
   column-count: 2;
   column-width: 3em;
   column-gap: 7em;
