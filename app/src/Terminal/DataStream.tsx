@@ -9,7 +9,7 @@ type DataStreamProps = {
   wordLength: number;
   active: boolean;
   onSelect: (value: string) => void;
-  onClick: () => void;
+  onClick: (value: string) => void;
 };
 
 const DataStream: React.FC<DataStreamProps> = ({
@@ -34,11 +34,15 @@ const DataStream: React.FC<DataStreamProps> = ({
       }
     }
 
+    const handleClick = () => {
+      onClick(val);
+    }
+
     const none = () => void(0);
 
     if (active) {
       return (
-        <Char key={key} value={display} onHover={handleHover} onLeave={handleLeave} onClick={onClick}/>
+        <Char key={key} value={display} onHover={handleHover} onLeave={handleLeave} onClick={handleClick}/>
       )
     } else {
       return (

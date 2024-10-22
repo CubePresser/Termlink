@@ -31,10 +31,6 @@ const InputDeviceProvider: React.FC<React.PropsWithChildren> = ({
     }
   }, []);
 
-  useEffect(() => {
-    console.log(`isMouse = ${isMouse}`);
-  }, [isMouse])
-
   return (
     <InputDeviceContext.Provider value={{ isMouse }}>
       {children}
