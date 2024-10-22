@@ -1,5 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useContext } from 'react';
 import Char from '../Data/Char';
+import { InputDeviceContext } from '../Hooks/InputDevice';
 
 type DataStreamProps = {
   data: string;
@@ -20,14 +21,15 @@ const DataStream: React.FC<DataStreamProps> = ({
   onSelect,
   onClick
 }) => {
+  const { isMouse } = useContext(InputDeviceContext);
+
   const renderChar = useCallback((key: string, display: string, value?: string) => {
     const val = value ?? display;
 
     const handleHover = () => onSelect(val);
     
     const handleLeave = () => {
-      // TODO: Replace with hook?
-      if (navigator.maxTouchPoints === 0) {
+      if (isMouse) {
         onSelect('');
       }
     }

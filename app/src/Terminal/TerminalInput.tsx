@@ -66,8 +66,7 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
 
   // Always keep this input in focus (Is there a better way to do this?)
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
-    // TODO: Put this into a reusable hook?
-    if (navigator.maxTouchPoints === 0) {
+    if (isMouse) {
       event.target.focus();
     }
   }
