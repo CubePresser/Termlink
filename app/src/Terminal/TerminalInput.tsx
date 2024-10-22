@@ -39,6 +39,16 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
     }
   }, [value]);
 
+  useEffect(() => {
+    // When the history updates, a submission has been made. If there is a typing anim in progress, cancel and clear input field.
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+
+      setInput("");
+    }
+  }, [history]);
+
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     if (intervalId) {
       clearInterval(intervalId);
@@ -72,7 +82,7 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
     }
   }
 
-  // Always keep this input in focus (Is there a better way to do this?)
+  // Mouse/Keyboard - always keep the input in focus so users can type whenever they'd please
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
     if (isMouse) {
       event.target.focus();
