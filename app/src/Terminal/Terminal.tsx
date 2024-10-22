@@ -46,7 +46,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
 
   useEffect(() => {
     const range = LengthRange[difficulty];
-    const length = Math.floor(Math.random() * (range.high - range.low)) + range.low;
+    const length = Math.round(Math.random() * (range.high - range.low)) + range.low;
 
     getWords(length, wordcount).then((genWords) => {
       const genData = generateDataStream(genWords);
