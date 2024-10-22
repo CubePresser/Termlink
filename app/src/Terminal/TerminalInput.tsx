@@ -58,9 +58,17 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
       setInput(submit);
     }
 
-    if (event.key === "Enter") {
-      onInput(submit);
-      setInput("");
+    switch (event.key) {
+      case "Enter":
+        onInput(submit);
+        setInput("");
+        break;
+      case "ArrowLeft":
+      case "ArrowRight":
+        event.preventDefault();
+        break;
+      default:
+        break;
     }
   }
 
