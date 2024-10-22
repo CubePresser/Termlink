@@ -12,6 +12,10 @@ body {
 
   /* Reported issue regarding spacing on Safari when using text-shadow with column-count: https://developer.apple.com/forums/thread/766755 */
   text-shadow: 0 0 4px greenyellow;
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 body::after {
