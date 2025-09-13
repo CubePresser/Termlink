@@ -103,7 +103,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
 
     // Starts with '{' | '[' | '(' | '<'
     if (/^[{([<]/.test(value)) {
-      for (let [key, val] of brackets.entries()) {
+      for (const [key, val] of brackets.entries()) {
         if (value === val) {
           if (!usedBrackets.includes(key)) {
             setUsedBrackets([...usedBrackets, key]);
