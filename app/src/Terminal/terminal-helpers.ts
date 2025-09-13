@@ -90,7 +90,7 @@ export const findBrackets = (data: string): Map<number, string> => {
     '>': '<'
   };
 
-  let brackets = new Map<number, string>();
+  const brackets = new Map<number, string>();
 
   // Usable bracket pairs may only exist within a single row
   for (let row = 0; row < 34; row++) {
@@ -106,19 +106,21 @@ export const findBrackets = (data: string): Map<number, string> => {
         case '{':
         case '(':
         case '[':
-        case '<':
+        case '<': {
           const found = candidates.get(char) ?? [];
           candidates.set(char, [...found, i]);
           break;
+        }
         case '}':
         case ')':
         case ']':
-        case '>':
+        case '>': {
           const openers = candidates.get(pairs[char]) ?? [];
           openers.forEach(open => brackets.set(open + start, segment.slice(open, i + 1)))
           // All matched previous opening brackets have been closed, remove their positions from candidates
           candidates.set(pairs[char], []);
           break;
+        }
         default:
           // If a letter is encountered, all previous candidates become invalid for matching
           // Brackets are not allowed to match if there is a word in between them

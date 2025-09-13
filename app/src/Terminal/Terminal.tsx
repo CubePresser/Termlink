@@ -44,6 +44,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
   const [ usedBrackets, setUsedBrackets ] = useState<number[]>([]);
   const [ selection, setSelection ] = useState<string>('');
 
+  // Regenerates the datastream whenever config settings change
   useEffect(() => {
     const range = LengthRange[difficulty];
     const length = Math.round(Math.random() * (range.high - range.low)) + range.low;
@@ -53,7 +54,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
       setWords(genWords);
       setData(genData);
     });
-  }, [key, difficulty]);
+  }, [key, difficulty, wordcount]);
 
   useEffect(() => {
 
@@ -96,6 +97,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
   const handleTerminalInput = useCallback((value: string): void => {
     const messages: string[] = [];
 
+    // Developer hack :)
     if (value === "$SUDO SETADMIN1") {
       setSuccess(true);
       return;
@@ -103,7 +105,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
 
     // Starts with '{' | '[' | '(' | '<'
     if (/^[{([<]/.test(value)) {
-      for (let [key, val] of brackets.entries()) {
+      for (const [key, val] of brackets.entries()) {
         if (value === val) {
           if (!usedBrackets.includes(key)) {
             setUsedBrackets([...usedBrackets, key]);
@@ -157,7 +159,7 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
     }
 
     return addToHistory(messages, value);
-  }, [brackets, usedBrackets, words, password, addToHistory]);
+  }, [brackets, usedBrackets, words, password, addToHistory, data, attempts]);
 
   const handleReset = () => {
     setAttempts(4);
