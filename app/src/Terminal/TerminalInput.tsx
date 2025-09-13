@@ -18,7 +18,6 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
   useEffect(() => {
     if (value !== null && value !== undefined) {
       let count = 1;
-      // Using a var so I can cancel the interval from within itself feels so wrong but so right??
       const interval = setInterval(() => {
         setInput(value.slice(0, count));
         if (count >= value.length) {
