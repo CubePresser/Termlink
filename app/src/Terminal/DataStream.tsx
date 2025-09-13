@@ -49,7 +49,7 @@ const DataStream: React.FC<DataStreamProps> = ({
         <Char key={key} value={display} onHover={none} onLeave={none} onClick={none}/>
       );
     }
-  }, [onSelect, onClick, active])
+  }, [onSelect, onClick, active, isMouse])
 
   const chars: React.ReactNode[] = useMemo(() => {
     const fragments: React.ReactNode[] = [];
