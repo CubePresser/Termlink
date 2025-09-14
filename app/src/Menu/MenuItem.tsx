@@ -4,7 +4,7 @@ export type MenuItemProps = {
   innerRef?: React.Ref<HTMLButtonElement>;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
-const MenuItem: React.FC<MenuItemProps> = ({
+export const MenuItem: React.FC<MenuItemProps> = ({
   innerRef,
   onMouseMove,
   onMouseLeave,
@@ -38,5 +38,3 @@ const MenuItem: React.FC<MenuItemProps> = ({
     </button>
   );
 };
-
-export default MenuItem;

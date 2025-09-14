@@ -7,7 +7,7 @@ type CharProps = {
   value: string;
 }
 
-const Char: React.FC<CharProps> = ({
+export const Char: React.FC<CharProps> = ({
   onHover,
   value,
   onLeave,
@@ -60,5 +60,3 @@ const Char: React.FC<CharProps> = ({
     </span>
   );
 };
-
-export default Char;

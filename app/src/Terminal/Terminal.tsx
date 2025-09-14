@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import TermlinkHeader from './TermlinkHeader';
-import DataStream from './DataStream';
-import TerminalInput from './TerminalInput';
-import { getWords, generateDataStream, findBrackets } from './terminal-helpers';
-import TerminalLocked from './TerminalLocked';
+import { TermlinkHeader, TerminalInput, TerminalLocked } from './';
+import { DataStream } from './DataStream';
+import { getWords, generateDataStream, findBrackets } from './helpers';
 
 const LengthRange = [
   {
@@ -34,7 +32,7 @@ type TerminalProps = {
   wordcount: number,
 }
 
-const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcount = 14 }) => {
+export const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcount = 14 }) => {
   const [ key, setKey ] = useState<string>(String(Math.random()));
   const [ data, setData ] = useState<string>("");
   const [ words, setWords ] = useState<string[]>([]);
@@ -214,5 +212,3 @@ const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcoun
     </div>
   )
 };
-
-export default Terminal;

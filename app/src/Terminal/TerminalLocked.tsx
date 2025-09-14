@@ -4,7 +4,7 @@ type TerminalLockedProps = {
   onReset: () => void;
 }
 
-const TerminalLocked: React.FC<TerminalLockedProps> = ({onReset}) => {
+export const TerminalLocked: React.FC<TerminalLockedProps> = ({onReset}) => {
   const [ showReset, setShowReset ] = useState(false);
 
   useEffect(() => {
@@ -41,5 +41,3 @@ const TerminalLocked: React.FC<TerminalLockedProps> = ({onReset}) => {
     </form>
   )
 };
-
-export default TerminalLocked;

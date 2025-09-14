@@ -1,7 +1,6 @@
 import React from 'react';
-import TerminalHeader from './TerminalHeader';
-import Menu from '../Menu/Menu';
-import MenuItem from '../Menu/MenuItem';
+import { TerminalHeader } from './';
+import { Menu, MenuItem } from '../Menu';
 import { Difficulty } from "./constants";
 
 type TerminalMenuProps = {
@@ -12,7 +11,7 @@ type TerminalMenuProps = {
   wordcount: number;
 };
 
-const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, onUpdateCount, difficulty, wordcount }) => {
+export const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, onUpdateCount, difficulty, wordcount }) => {
   const handleLogout = () => {
     onLogout();
   };
@@ -41,5 +40,3 @@ const TerminalMenu: React.FC<TerminalMenuProps> = ({ onLogout, onPwdReset, onUpd
     </div>
   )
 };
-
-export default TerminalMenu;

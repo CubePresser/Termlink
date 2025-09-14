@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
-import Terminal from './Terminal/Terminal';
-import TerminalMenu from './Terminal/TerminalMenu';
+import { TerminalMenu, Terminal } from './Terminal';
 import { Difficulty } from "./Terminal/constants";
-import InputDeviceProvider from './Hooks/InputDevice';
+import InputDeviceProvider from './state/InputDeviceProvider';
 
 const App: React.FC = () => {
   // Could probably use react router for something like this buuuut.... NAAAAHHH

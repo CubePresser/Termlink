@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TerminalHeader: React.FC = () => {
+export const TerminalHeader: React.FC = () => {
   return (
     <div className="TerminalHeader">
       <span>{"ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM"}</span>
@@ -9,5 +9,3 @@ const TerminalHeader: React.FC = () => {
     </div>
   );
 };
-
-export default TerminalHeader;

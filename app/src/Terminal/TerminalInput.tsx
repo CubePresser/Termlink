@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { InputDeviceContext } from '../Hooks/InputDevice';
+import { InputDeviceContext } from '../state/InputDeviceProvider';
 
 type TerminalInputProps = {
   onInput: (value: string) => void;
@@ -8,7 +8,7 @@ type TerminalInputProps = {
   value?: string;
 };
 
-const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
+export const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
@@ -140,5 +140,3 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
     </div>
   );
 };
-
-export default TerminalInput;

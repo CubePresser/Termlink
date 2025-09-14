@@ -4,7 +4,7 @@ type TermlinkHeaderProps = {
   attempts: number;
 };
 
-const TermlinkHeader: React.FC<TermlinkHeaderProps> = ({
+export const TermlinkHeader: React.FC<TermlinkHeaderProps> = ({
   attempts,
 }) => {
   const attemptsSymbols = useMemo<string>(() => {
@@ -27,5 +27,3 @@ const TermlinkHeader: React.FC<TermlinkHeaderProps> = ({
     </div>
   )
 }
-
-export default TermlinkHeader;

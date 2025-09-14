@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useContext } from 'react';
-import Char from '../Data/Char';
-import { InputDeviceContext } from '../Hooks/InputDevice';
+import { Char } from './';
+import { InputDeviceContext } from '../../state/InputDeviceProvider';
 
 type DataStreamProps = {
   data: string;
@@ -12,7 +12,7 @@ type DataStreamProps = {
   onClick: (value: string) => void;
 };
 
-const DataStream: React.FC<DataStreamProps> = ({
+export const DataStream: React.FC<DataStreamProps> = ({
   data,
   brackets,
   usedBrackets,
@@ -120,5 +120,3 @@ const DataStream: React.FC<DataStreamProps> = ({
     </div>
   );
 }
-
-export default DataStream;

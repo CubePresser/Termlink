@@ -5,7 +5,7 @@ type MenuProps = {
   className?: string;
 } & React.PropsWithChildren;
 
-const Menu: React.FC<MenuProps> = ({
+export const Menu: React.FC<MenuProps> = ({
   className,
   children
 }) => {
@@ -46,5 +46,3 @@ const Menu: React.FC<MenuProps> = ({
     </div>
   );
 }
-
-export default Menu;
