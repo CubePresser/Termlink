@@ -2,14 +2,7 @@ import React from 'react';
 import TerminalHeader from './TerminalHeader';
 import Menu from '../Menu/Menu';
 import MenuItem from '../Menu/MenuItem';
-
-export enum Difficulty {
-  'Very Easy',
-  'Easy',
-  'Average',
-  'Hard',
-  'Very Hard',
-}
+import { Difficulty } from "./constants";
 
 type TerminalMenuProps = {
   onLogout: () => void;

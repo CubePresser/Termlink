@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { InputDeviceContext } from '../Hooks/InputDevice';
 
 type TerminalInputProps = {
@@ -10,9 +10,16 @@ type TerminalInputProps = {
 
 const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, history }) => {
   const [ input, setInput ] = useState<string>("");
-  const [ intervalId, setIntervalId ] = useState<NodeJS.Timeout | null>(null);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   const { isMouse } = useContext(InputDeviceContext);
+
+  const abortInterval = () => {
+    if (intervalId.current !== null) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+  }
 
   // Value changes when the cursor is used to select from the datastream
   useEffect(() => {
@@ -21,37 +28,33 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
       const interval = setInterval(() => {
         setInput(value.slice(0, count));
         if (count >= value.length) {
-          clearInterval(interval);
+          abortInterval();
         }
 
         count++;
       }, 50);
-      setIntervalId(interval);
+      intervalId.current = interval;
 
       return () => {
-        clearInterval(interval);
-        setIntervalId(null);
+        abortInterval();
       }
     } else {
       setInput("");
-      setIntervalId(null);
+      intervalId.current = null;
     }
   }, [value]);
 
   useEffect(() => {
     // When the history updates, a submission has been made. If there is a typing anim in progress, cancel and clear input field.
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-
+    if (intervalId.current) {
+      abortInterval();
       setInput("");
     }
   }, [history]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
+    if (intervalId.current) {
+      abortInterval();
     }
 
     setInput(event.target.value.toUpperCase());
@@ -60,9 +63,8 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     let submit = input;
 
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
+    if (intervalId.current) {
+      abortInterval();
       submit = value ?? "";
       setInput(submit);
     }
@@ -95,9 +97,8 @@ const TerminalInput: React.FC<TerminalInputProps> = ({ onInput, active, value, h
 
     let submit = input;
 
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
+    if (intervalId.current) {
+      abortInterval();
       submit = value ?? "";
     }
 

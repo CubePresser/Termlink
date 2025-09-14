@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 import Terminal from './Terminal/Terminal';
-import TerminalMenu, { Difficulty } from './Terminal/TerminalMenu';
+import TerminalMenu from './Terminal/TerminalMenu';
+import { Difficulty } from "./Terminal/constants";
 import InputDeviceProvider from './Hooks/InputDevice';
 
 const App: React.FC = () => {
