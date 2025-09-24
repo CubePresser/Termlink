@@ -6,9 +6,7 @@ body {
   min-height: 100vh;
 
   background-color: black;
-  background-image: radial-gradient(
-    rgba(83, 117, 32, 0.5), black 80%
-  );
+  background-image: radial-gradient(rgba(83, 117, 32, 0.5), black 80%);
 
   /* Reported issue regarding spacing on Safari when using text-shadow with column-count: https://developer.apple.com/forums/thread/766755 */
   text-shadow: 0 0 4px greenyellow;
@@ -19,7 +17,7 @@ body {
 }
 
 body::after {
-  content: "";
+  content: '';
   pointer-events: none;
   position: absolute;
 
@@ -42,9 +40,9 @@ body::after {
 
 /* I'll be honest, I don't know how this works, but it does! */
 @keyframes scrolling {
-	100% {
-		background-position: 0% 50%;
-	}
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .Terminal {
@@ -158,7 +156,7 @@ button {
 
 @keyframes blink {
   50% {
-    opacity: 0.0;
+    opacity: 0;
   }
 }
 

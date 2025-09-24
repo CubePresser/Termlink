@@ -6,46 +6,51 @@ import { getWords, generateDataStream, findBrackets } from './helpers';
 const LengthRange = [
   {
     low: 4,
-    high: 5
+    high: 5,
   },
   {
     low: 6,
-    high: 8
+    high: 8,
   },
   {
     low: 9,
-    high: 10
+    high: 10,
   },
   {
     low: 11,
-    high: 12
+    high: 12,
   },
   {
     low: 13,
-    high: 15
-  }
+    high: 15,
+  },
 ];
 
 type TerminalProps = {
   onSuccess: () => void;
-  difficulty: number,
-  wordcount: number,
-}
+  difficulty: number;
+  wordcount: number;
+};
 
-export const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, wordcount = 14 }) => {
-  const [ key, setKey ] = useState<string>(String(Math.random()));
-  const [ data, setData ] = useState<string>("");
-  const [ words, setWords ] = useState<string[]>([]);
-  const [ attempts, setAttempts ] = useState<number>(4);
-  const [ history, setHistory ] = useState<string[]>([]);
-  const [ success, setSuccess ] = useState<boolean>(false);
-  const [ usedBrackets, setUsedBrackets ] = useState<number[]>([]);
-  const [ selection, setSelection ] = useState<string>('');
+export const Terminal: React.FC<TerminalProps> = ({
+  onSuccess,
+  difficulty = 0,
+  wordcount = 14,
+}) => {
+  const [key, setKey] = useState<string>(String(Math.random()));
+  const [data, setData] = useState<string>('');
+  const [words, setWords] = useState<string[]>([]);
+  const [attempts, setAttempts] = useState<number>(4);
+  const [history, setHistory] = useState<string[]>([]);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [usedBrackets, setUsedBrackets] = useState<number[]>([]);
+  const [selection, setSelection] = useState<string>('');
 
   // Regenerates the datastream whenever config settings change
   useEffect(() => {
     const range = LengthRange[difficulty];
-    const length = Math.round(Math.random() * (range.high - range.low)) + range.low;
+    const length =
+      Math.round(Math.random() * (range.high - range.low)) + range.low;
 
     getWords(length, wordcount).then((genWords) => {
       const genData = generateDataStream(genWords);
@@ -55,21 +60,22 @@ export const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, w
   }, [key, difficulty, wordcount]);
 
   useEffect(() => {
-
     let shouldProceed = true;
     if (success) {
       setTimeout(() => {
         if (shouldProceed) {
           onSuccess();
         }
-      }, 3000)
+      }, 3000);
     }
 
-    return () => { shouldProceed = false }
+    return () => {
+      shouldProceed = false;
+    };
   }, [success, onSuccess]);
 
   const brackets: Map<number, string> = useMemo(() => {
-    if (data !== "") {
+    if (data !== '') {
       return findBrackets(data);
     }
 
@@ -78,95 +84,109 @@ export const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, w
 
   const password = useMemo<string>(() => {
     if (words.length === 0) {
-      return "";
+      return '';
     }
 
     return words[Math.floor(Math.random() * (words.length - 1))];
   }, [words]);
 
-  const addToHistory = useCallback((messages: string[], value: string): void => {
-    const newHistory = [...history, value, ...messages];
-    // There is only enough room for 15 lines of history, lose the rest.
-    const trimmedHistory = newHistory.length > 15 ? newHistory.slice(-15) : newHistory;
+  const addToHistory = useCallback(
+    (messages: string[], value: string): void => {
+      const newHistory = [...history, value, ...messages];
+      // There is only enough room for 15 lines of history, lose the rest.
+      const trimmedHistory =
+        newHistory.length > 15 ? newHistory.slice(-15) : newHistory;
 
-    setHistory(trimmedHistory);
-  }, [history]);
+      setHistory(trimmedHistory);
+    },
+    [history],
+  );
 
-  const handleTerminalInput = useCallback((value: string): void => {
-    const messages: string[] = [];
+  const handleTerminalInput = useCallback(
+    (value: string): void => {
+      const messages: string[] = [];
 
-    // Developer hack :)
-    if (value === "$SUDO SETADMIN1") {
-      setSuccess(true);
-      return;
-    }
-
-    // Starts with '{' | '[' | '(' | '<'
-    if (/^[{([<]/.test(value)) {
-      for (const [key, val] of brackets.entries()) {
-        if (value === val) {
-          if (!usedBrackets.includes(key)) {
-            setUsedBrackets([...usedBrackets, key]);
-            const rand = Math.floor(Math.random() * 100);
-            if (rand < 80) {
-              // 80% chance to remove a dud
-              const duds = words.filter((word) => word !== password && data.includes(word));
-
-              // No more duds to remove
-              if (duds.length === 0) {
-                messages.push('Entry denied');
-              } else {
-                setData(data.replace(duds[Math.floor(Math.random() * (duds.length - 1))], '...............'.slice(0, duds[0].length)));
-                messages.push('Dud removed.');
-              }
-            } else {
-              // 20% chance to reset attempts
-              setAttempts(4);
-              messages.push('Allowance');
-              messages.push('replenished.');
-            }
-          }
-          
-          return addToHistory(messages, value);
-        }
-      }
-    }
-
-    if (value.length !== password.length) {
-      messages.push('Entry denied');
-      setAttempts(attempts - 1);
-    } else {
-      let matches = 0;
-      for (let i = 0; i < password.length; i++) {
-        if (value[i] === password[i]) {
-          matches++;
-        }
-      }
-
-      if (matches === password.length) {
-        messages.push('Exact match!');
-        messages.push('Please wait');
-        messages.push('while system');
-        messages.push('is accessed.');
+      // Developer hack :)
+      if (value === '$SUDO SETADMIN1') {
         setSuccess(true);
-      } else {
-        messages.push('Entry denied');
-        messages.push(`${matches}/${password.length} correct.`);
-        setAttempts(attempts - 1);
+        return;
       }
-    }
 
-    return addToHistory(messages, value);
-  }, [brackets, usedBrackets, words, password, addToHistory, data, attempts]);
+      // Starts with '{' | '[' | '(' | '<'
+      if (/^[{([<]/.test(value)) {
+        for (const [key, val] of brackets.entries()) {
+          if (value === val) {
+            if (!usedBrackets.includes(key)) {
+              setUsedBrackets([...usedBrackets, key]);
+              const rand = Math.floor(Math.random() * 100);
+              if (rand < 80) {
+                // 80% chance to remove a dud
+                const duds = words.filter(
+                  (word) => word !== password && data.includes(word),
+                );
+
+                // No more duds to remove
+                if (duds.length === 0) {
+                  messages.push('Entry denied');
+                } else {
+                  setData(
+                    data.replace(
+                      duds[Math.floor(Math.random() * (duds.length - 1))],
+                      '...............'.slice(0, duds[0].length),
+                    ),
+                  );
+                  messages.push('Dud removed.');
+                }
+              } else {
+                // 20% chance to reset attempts
+                setAttempts(4);
+                messages.push('Allowance');
+                messages.push('replenished.');
+              }
+            }
+
+            return addToHistory(messages, value);
+          }
+        }
+      }
+
+      if (value.length !== password.length) {
+        messages.push('Entry denied');
+        setAttempts(attempts - 1);
+      } else {
+        let matches = 0;
+        for (let i = 0; i < password.length; i++) {
+          if (value[i] === password[i]) {
+            matches++;
+          }
+        }
+
+        if (matches === password.length) {
+          messages.push('Exact match!');
+          messages.push('Please wait');
+          messages.push('while system');
+          messages.push('is accessed.');
+          setSuccess(true);
+        } else {
+          messages.push('Entry denied');
+          messages.push(`${matches}/${password.length} correct.`);
+          setAttempts(attempts - 1);
+        }
+      }
+
+      return addToHistory(messages, value);
+    },
+    [brackets, usedBrackets, words, password, addToHistory, data, attempts],
+  );
 
   const handleReset = () => {
     setAttempts(4);
     setWords([]);
-    setData("");
+    setData('');
     setKey(String(Math.random()));
     setSuccess(false);
     setHistory([]);
-    setSelection("");
+    setSelection('');
   };
 
   // Using callback on these two prevent unnecessary re-renders in <DataStream> whenever mouse hovers into new character. Brings render times from 20ms to 0.2ms.
@@ -174,41 +194,49 @@ export const Terminal: React.FC<TerminalProps> = ({ onSuccess, difficulty = 0, w
     setSelection(value);
   }, []);
 
-  const handleDataClick = useCallback((value: string) => {
-    handleTerminalInput(value);
-  }, [handleTerminalInput]);
+  const handleDataClick = useCallback(
+    (value: string) => {
+      handleTerminalInput(value);
+    },
+    [handleTerminalInput],
+  );
 
   return (
     <div className="Terminal">
-      {
-        attempts > 0 ?
-          <>
-            <TermlinkHeader attempts={attempts} />
-            <br/>
-            <div className="data--container">
-              {
-                data !== "" ?
-                <>
-                  <DataStream
-                    data={data}
-                    brackets={brackets}
-                    usedBrackets={usedBrackets}
-                    wordLength={password.length}
-                    active={!success}
-                    onSelect={handleDataSelect}
-                    onClick={handleDataClick}
-                  />
-                  <TerminalInput active={!success} onInput={handleTerminalInput} value={selection} history={history}/>
-                </>
-                // TODO: Something better than this :)
-                // Loading Screen
-                : <span style={{ width: '28em' }}/>
-              }
-            </div>
-            <br/>
-          </>
-          : <TerminalLocked onReset={handleReset}/>
-      }
+      {attempts > 0 ? (
+        <>
+          <TermlinkHeader attempts={attempts} />
+          <br />
+          <div className="data--container">
+            {data !== '' ? (
+              <>
+                <DataStream
+                  data={data}
+                  brackets={brackets}
+                  usedBrackets={usedBrackets}
+                  wordLength={password.length}
+                  active={!success}
+                  onSelect={handleDataSelect}
+                  onClick={handleDataClick}
+                />
+                <TerminalInput
+                  active={!success}
+                  onInput={handleTerminalInput}
+                  value={selection}
+                  history={history}
+                />
+              </>
+            ) : (
+              // TODO: Something better than this :)
+              // Loading Screen
+              <span style={{ width: '28em' }} />
+            )}
+          </div>
+          <br />
+        </>
+      ) : (
+        <TerminalLocked onReset={handleReset} />
+      )}
     </div>
-  )
+  );
 };

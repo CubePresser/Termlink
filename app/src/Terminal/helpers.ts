@@ -1,11 +1,43 @@
-const randomBucket = ['!','"','#','$','%','&','\'','(',')','*','+',',','-','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~',];
+const randomBucket = [
+  '!',
+  '"',
+  '#',
+  '$',
+  '%',
+  '&',
+  "'",
+  '(',
+  ')',
+  '*',
+  '+',
+  ',',
+  '-',
+  '/',
+  ':',
+  ';',
+  '<',
+  '=',
+  '>',
+  '?',
+  '@',
+  '[',
+  '\\',
+  ']',
+  '^',
+  '_',
+  '`',
+  '{',
+  '|',
+  '}',
+  '~',
+];
 
 const findWordSlots = (data: string, size: number, padding = 2): number[] => {
   const slots: number[] = [];
 
   // Sliding window approach to find all possible indices in which a word can be inserted into the data stream
   // Build initial window
-  for (let start = 0, end = 0; end < data.length;) {
+  for (let start = 0, end = 0; end < data.length; ) {
     // Check if character is part of a word - move window beyond word if found
     if ((data[end].match(/[A-Za-z]/) || []).length !== 0) {
       start = end + size;
@@ -17,7 +49,7 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
     // TODO: Padding should not be applied to edges of the data stream, only between words
 
     // Window is size of a word (+padding) and we have not encountered a word character
-    if ((end + 1) - start === size + padding*2) { 
+    if (end + 1 - start === size + padding * 2) {
       slots.push(start + padding);
       start++;
     }
@@ -27,35 +59,42 @@ const findWordSlots = (data: string, size: number, padding = 2): number[] => {
   }
 
   return slots;
-}
+};
 
-export const getWords = async (length: number, count: number): Promise<string[]> => {
+export const getWords = async (
+  length: number,
+  count: number,
+): Promise<string[]> => {
   if (count < 0) {
     console.error('word count cannot be less than 0');
   }
 
   const wordbank = await import('./dictionary.json');
-  const matchedWords = (wordbank.default as { [key: number]: string[] })[length];
+  const matchedWords = (wordbank.default as { [key: number]: string[] })[
+    length
+  ];
   if (matchedWords === undefined) {
     console.error('Failed to fetch any words of length: ', length);
     return [];
   }
 
-  const trueCount = (count > matchedWords.length) ? matchedWords.length : count;
+  const trueCount = count > matchedWords.length ? matchedWords.length : count;
 
   const selections = new Set<string>();
   while (selections.size !== trueCount) {
     // Get random selection until num selections equals count
-    const randomSelection: number = Math.floor(Math.random() * matchedWords.length);
+    const randomSelection: number = Math.floor(
+      Math.random() * matchedWords.length,
+    );
     selections.add(matchedWords[randomSelection].toUpperCase());
   }
 
   return Array.from(selections);
-}
+};
 
 export const generateDataStream = (words: string[]): string => {
   // 17 Rows and 12 char per column per row for a total of 17*2*12= 408 characters needed
-  let data = "";
+  let data = '';
   for (let i = 0; i < 408; i++) {
     data += randomBucket[Math.floor(Math.random() * (randomBucket.length - 1))];
   }
@@ -70,7 +109,7 @@ export const generateDataStream = (words: string[]): string => {
     }
 
     const slot = slots[Math.floor(Math.random() * (slots.length - 1))];
-    
+
     const front = data.slice(0, slot);
     const back = data.slice(slot + size);
 
@@ -78,7 +117,7 @@ export const generateDataStream = (words: string[]): string => {
   }
 
   return data;
-}
+};
 
 // Returns dictionary of matched bracket start indices mapped to their respective string representation
 // Each character index is allowed only ONE matched bracket sequence, ex: ("{...}.}" will yield only "{...}")
@@ -87,7 +126,7 @@ export const findBrackets = (data: string): Map<number, string> => {
     '}': '{',
     ']': '[',
     ')': '(',
-    '>': '<'
+    '>': '<',
   };
 
   const brackets = new Map<number, string>();
@@ -116,7 +155,9 @@ export const findBrackets = (data: string): Map<number, string> => {
         case ']':
         case '>': {
           const openers = candidates.get(pairs[char]) ?? [];
-          openers.forEach(open => brackets.set(open + start, segment.slice(open, i + 1)))
+          openers.forEach((open) =>
+            brackets.set(open + start, segment.slice(open, i + 1)),
+          );
           // All matched previous opening brackets have been closed, remove their positions from candidates
           candidates.set(pairs[char], []);
           break;

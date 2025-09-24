@@ -19,48 +19,69 @@ export const DataStream: React.FC<DataStreamProps> = ({
   wordLength,
   active,
   onSelect,
-  onClick
+  onClick,
 }) => {
   const { isMouse } = useContext(InputDeviceContext);
 
-  const renderChar = useCallback((key: string, display: string, value?: string) => {
-    const val = value ?? display;
+  const renderChar = useCallback(
+    (key: string, display: string, value?: string) => {
+      const val = value ?? display;
 
-    const handleHover = () => onSelect(val);
-    
-    const handleLeave = () => {
-      if (isMouse) {
-        onSelect('');
+      const handleHover = () => onSelect(val);
+
+      const handleLeave = () => {
+        if (isMouse) {
+          onSelect('');
+        }
+      };
+
+      const handleClick = () => {
+        onClick(val);
+      };
+
+      const none = () => void 0;
+
+      if (active) {
+        return (
+          <Char
+            key={key}
+            value={display}
+            onHover={handleHover}
+            onLeave={handleLeave}
+            onClick={handleClick}
+          />
+        );
+      } else {
+        return (
+          <Char
+            key={key}
+            value={display}
+            onHover={none}
+            onLeave={none}
+            onClick={none}
+          />
+        );
       }
-    }
-
-    const handleClick = () => {
-      onClick(val);
-    }
-
-    const none = () => void(0);
-
-    if (active) {
-      return (
-        <Char key={key} value={display} onHover={handleHover} onLeave={handleLeave} onClick={handleClick}/>
-      )
-    } else {
-      return (
-        <Char key={key} value={display} onHover={none} onLeave={none} onClick={none}/>
-      );
-    }
-  }, [onSelect, onClick, active, isMouse])
+    },
+    [onSelect, onClick, active, isMouse],
+  );
 
   const chars: React.ReactNode[] = useMemo(() => {
     const fragments: React.ReactNode[] = [];
 
-    const renderBrackets = (start: number, value: string): [React.ReactNode, number] => {
+    const renderBrackets = (
+      start: number,
+      value: string,
+    ): [React.ReactNode, number] => {
       const result: React.ReactNode[] = [];
-      
-      let finalIdx = (value.length - 1) + start;
+
+      let finalIdx = value.length - 1 + start;
       for (let i = start; i < value.length + start; i++) {
         if (i !== start && brackets.has(i) && !usedBrackets.includes(i)) {
-          const [renderedBrackets, newIdx] = renderBrackets(i, brackets.get(i) ?? '');
+          const [renderedBrackets, newIdx] = renderBrackets(
+            i,
+            brackets.get(i) ?? '',
+          );
           result.push(renderedBrackets);
           if (newIdx > finalIdx) {
             finalIdx = newIdx;
@@ -70,44 +91,45 @@ export const DataStream: React.FC<DataStreamProps> = ({
           }
         } else {
           const char = data[i];
-          result.push(renderChar(`${char}-${i}`, char, i === start ? value : char));
+          result.push(
+            renderChar(`${char}-${i}`, char, i === start ? value : char),
+          );
         }
       }
 
-      return [(
-        <span className="bracket" key={`bracket-${start}`}>{result}</span>
-      ), finalIdx];
-    }
+      return [
+        <span className="bracket" key={`bracket-${start}`}>
+          {result}
+        </span>,
+        finalIdx,
+      ];
+    };
 
     for (let i = 0; i < data.length; i++) {
       // Found a word
       if (data[i].match(/[A-Za-z]/)) {
         const word = data.slice(i, i + wordLength);
-        fragments.push(
-          renderChar(word, word)
-        );
+        fragments.push(renderChar(word, word));
         i += wordLength - 1;
       } else if (brackets.has(i) && !usedBrackets.includes(i)) {
         const bracket = brackets.get(i) ?? '';
-        const [ renderedBrackets, newIdx ] = renderBrackets(i, bracket);
-        fragments.push(renderedBrackets)
+        const [renderedBrackets, newIdx] = renderBrackets(i, bracket);
+        fragments.push(renderedBrackets);
         i = newIdx;
       } else {
         const char = data[i];
-        fragments.push(
-          renderChar(`${char}-${i}`, char)
-        );
+        fragments.push(renderChar(`${char}-${i}`, char));
       }
     }
     return fragments;
   }, [data, wordLength, brackets, usedBrackets, renderChar]);
 
   const addresses: string = useMemo(() => {
-    let fragments: string = "";
-    
-    const addr = 0xF964;
+    let fragments: string = '';
+
+    const addr = 0xf964;
     for (let row = 0; row < 34; row++) {
-      fragments += `0x${(addr + (row * 12)).toString(16).toUpperCase()}`;
+      fragments += `0x${(addr + row * 12).toString(16).toUpperCase()}`;
     }
 
     return fragments;
@@ -119,4 +141,4 @@ export const DataStream: React.FC<DataStreamProps> = ({
       <div className={`data-stream ${active ? '' : 'disabled'}`}>{chars}</div>
     </div>
   );
-}
+};
