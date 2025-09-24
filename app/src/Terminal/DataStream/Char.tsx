@@ -5,37 +5,41 @@ type CharProps = {
   onLeave: () => void;
   onClick: () => void;
   value: string;
-}
+};
 
 export const Char: React.FC<CharProps> = ({
   onHover,
   value,
   onLeave,
-  onClick
-}) => { 
+  onClick,
+}) => {
   const [pressed, setPressed] = useState<boolean>(false);
 
   const handleHover = () => {
     onHover(value);
-  }
+  };
 
   const handlePointerDown: React.PointerEventHandler<HTMLSpanElement> = () => {
     setPressed(true);
   };
 
-  const handlePointerCancel: React.PointerEventHandler<HTMLSpanElement> = () => {
+  const handlePointerCancel: React.PointerEventHandler<
+    HTMLSpanElement
+  > = () => {
     if (pressed) {
       setPressed(false);
     }
-  }
+  };
 
   const handlePointerLeave: React.PointerEventHandler<HTMLSpanElement> = () => {
     if (pressed) {
       setPressed(false);
     }
-  }
+  };
 
-  const handlePointerUp: React.PointerEventHandler<HTMLSpanElement> = (event) => {
+  const handlePointerUp: React.PointerEventHandler<HTMLSpanElement> = (
+    event,
+  ) => {
     if (pressed) {
       if (event.pointerType !== 'mouse') {
         onHover(value);
@@ -44,7 +48,7 @@ export const Char: React.FC<CharProps> = ({
       }
       setPressed(false);
     }
-  }
+  };
 
   return (
     <span

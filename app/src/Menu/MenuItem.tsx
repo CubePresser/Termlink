@@ -2,7 +2,7 @@ import React from 'react';
 
 export type MenuItemProps = {
   innerRef?: React.Ref<HTMLButtonElement>;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   innerRef,
@@ -11,7 +11,9 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   children,
   ...buttonProps
 }) => {
-  const handleMouseMove: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleMouseMove: React.MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
     event.currentTarget.focus();
 
     if (onMouseMove) {
@@ -19,13 +21,15 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     }
   };
 
-  const handleMouseLeave: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleMouseLeave: React.MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
     event.currentTarget.blur();
 
     if (onMouseLeave) {
       onMouseLeave(event);
     }
-  }
+  };
 
   return (
     <button
