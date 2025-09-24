@@ -48,7 +48,6 @@ export const Char: React.FC<CharProps> = ({
 
   return (
     <span
-      className="Char"
       onMouseOver={handleHover}
       onMouseLeave={onLeave}
       onPointerDown={handlePointerDown}

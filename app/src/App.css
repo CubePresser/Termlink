@@ -234,16 +234,16 @@ input {
   line-height: 1em;
 }
 
-.Char {
+.data-stream span:not(.bracket) {
   cursor: pointer;
 }
 
-.data-stream:not(.disabled) .Char:hover {
+.data-stream:not(.disabled) span:not(.bracket):hover {
   background-color: greenyellow;
   color: black;
 }
 
-.data-stream:not(.disabled) .Bracket:has(> .Char:first-child:hover) {
+.data-stream:not(.disabled) .bracket:has(> span:first-child:hover) {
   background-color: greenyellow;
   color: black;
 }

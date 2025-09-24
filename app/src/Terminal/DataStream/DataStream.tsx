@@ -75,7 +75,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
       }
 
       return [(
-        <span className="Bracket" key={`bracket-${start}`}>{result}</span>
+        <span className="bracket" key={`bracket-${start}`}>{result}</span>
       ), finalIdx];
     }
 
