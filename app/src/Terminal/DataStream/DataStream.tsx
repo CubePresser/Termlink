@@ -24,7 +24,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
   const { isMouse } = useContext(InputDeviceContext);
 
   const renderChar = useCallback(
-    (key: string, display: string, value?: string) => {
+    (key: string, display: string, value?: string, index?: number) => {
       const val = value ?? display;
 
       const handleHover = () => onSelect(val);
@@ -45,6 +45,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
         return (
           <Char
             key={key}
+            index={index}
             value={display}
             onHover={handleHover}
             onLeave={handleLeave}
@@ -92,7 +93,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
         } else {
           const char = data[i];
           result.push(
-            renderChar(`${char}-${i}`, char, i === start ? value : char),
+            renderChar(`${char}-${i}`, char, i === start ? value : char, i),
           );
         }
       }
@@ -109,7 +110,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
       // Found a word
       if (data[i].match(/[A-Za-z]/)) {
         const word = data.slice(i, i + wordLength);
-        fragments.push(renderChar(word, word));
+        fragments.push(renderChar(word, word, undefined, i));
         i += wordLength - 1;
       } else if (brackets.has(i) && !usedBrackets.includes(i)) {
         const bracket = brackets.get(i) ?? '';
@@ -118,7 +119,7 @@ export const DataStream: React.FC<DataStreamProps> = ({
         i = newIdx;
       } else {
         const char = data[i];
-        fragments.push(renderChar(`${char}-${i}`, char));
+        fragments.push(renderChar(`${char}-${i}`, char, undefined, i));
       }
     }
     return fragments;

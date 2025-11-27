@@ -125,11 +125,11 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
       <span className="input--line">
         &nbsp;{'>'}
         <input
-          autoFocus
+          // autoFocus
           maxLength={15}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
+          // onBlur={handleBlur}
           value={input}
           disabled={!active}
         />

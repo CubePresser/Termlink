@@ -5,6 +5,7 @@ type CharProps = {
   onLeave: () => void;
   onClick: () => void;
   value: string;
+  index?: number;
 };
 
 export const Char: React.FC<CharProps> = ({
@@ -12,6 +13,7 @@ export const Char: React.FC<CharProps> = ({
   value,
   onLeave,
   onClick,
+  index
 }) => {
   const [pressed, setPressed] = useState<boolean>(false);
 
@@ -50,14 +52,24 @@ export const Char: React.FC<CharProps> = ({
     }
   };
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLSpanElement> = (event) => {
+    if (event.key === 'Enter') {
+      onClick();
+    }
+  }
+
   return (
     <span
+      {...(index !== undefined ? { tabIndex: index } : {})}
       onMouseOver={handleHover}
       onMouseLeave={onLeave}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerCancel}
+      onBlur={onLeave}
+      onFocus={handleHover}
+      onKeyDown={handleKeyDown}
     >
       {value}
     </span>

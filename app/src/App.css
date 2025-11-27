@@ -234,14 +234,17 @@ input {
 
 .data-stream span:not(.bracket) {
   cursor: pointer;
+  outline: none;
 }
 
-.data-stream:not(.disabled) span:not(.bracket):hover {
+.data-stream:not(.disabled) span:not(.bracket):hover,
+.data-stream:not(.disabled) span:not(.bracket):focus-visible {
   background-color: greenyellow;
   color: black;
 }
 
-.data-stream:not(.disabled) .bracket:has(> span:first-child:hover) {
+.data-stream:not(.disabled) .bracket:has(> span:first-child:hover),
+.data-stream:not(.disabled) .bracket:has(> span:first-child:focus-visible) {
   background-color: greenyellow;
   color: black;
 }
