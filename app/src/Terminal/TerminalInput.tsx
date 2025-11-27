@@ -81,6 +81,8 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
         onInput(submit);
         setInput('');
         break;
+      case 'ArrowUp':
+      case 'ArrowDown':
       case 'ArrowLeft':
       case 'ArrowRight':
         event.preventDefault();
