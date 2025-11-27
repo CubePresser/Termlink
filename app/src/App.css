@@ -185,6 +185,11 @@ input {
   all: unset;
 }
 
+*::selection {
+  background-color: greenyellow;
+  color: black;
+}
+
 .TerminalInput input {
   width: 7.5em;
   caret-color: transparent;
