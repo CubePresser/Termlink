@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { TermlinkHeader, TerminalInput, TerminalLocked } from './';
 import { DataStream } from './DataStream';
 import { getWords, generateDataStream, findBrackets } from './helpers';
@@ -45,6 +45,42 @@ export const Terminal: React.FC<TerminalProps> = ({
   const [success, setSuccess] = useState<boolean>(false);
   const [usedBrackets, setUsedBrackets] = useState<number[]>([]);
   const [selection, setSelection] = useState<string>('');
+  const [cursorDisabled, setCursorDisabled] = useState<boolean>(false);
+
+  const terminalInputRef = useRef<HTMLInputElement | null>(null);
+
+  // "Global" event listeners
+  useEffect(() => {
+    function handleKeydown(event: KeyboardEvent) {
+      switch (event.key) {
+        case "Enter":
+          break;
+        case "Shift":
+        case "Tab":
+        case "ArrowUp":
+        case "ArrowDown":
+        case "ArrowLeft":
+        case "ArrowRight":
+          setCursorDisabled(true);
+          break;
+        default:
+          terminalInputRef?.current?.focus();
+          setCursorDisabled(true);
+      }
+    }
+
+    function handleMouseMove() {
+      setCursorDisabled(false);
+    }
+
+    window.addEventListener('keydown', handleKeydown);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+      window.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, []);
 
   // Regenerates the datastream whenever config settings change
   useEffect(() => {
@@ -202,7 +238,7 @@ export const Terminal: React.FC<TerminalProps> = ({
   );
 
   return (
-    <div className="Terminal">
+    <div className={`Terminal ${cursorDisabled && "cursor-disabled"}`}>
       {attempts > 0 ? (
         <>
           <TermlinkHeader attempts={attempts} />
@@ -224,6 +260,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                   onInput={handleTerminalInput}
                   value={selection}
                   history={history}
+                  ref={terminalInputRef}
                 />
               </>
             ) : (

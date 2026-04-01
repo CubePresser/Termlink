@@ -63,6 +63,11 @@ body::after {
   /* transform: scale(1.2, 1); */
 }
 
+.cursor-disabled {
+  pointer-events: none;
+  cursor: none;
+}
+
 #enter {
   position: absolute;
   bottom: -2em;

@@ -17,9 +17,19 @@ export const Char: React.FC<CharProps> = ({
 }) => {
   const [pressed, setPressed] = useState<boolean>(false);
 
-  const handleHover = () => {
+  const handleHover = (event: React.PointerEvent<HTMLSpanElement> | React.FocusEvent<HTMLSpanElement>) => {
     onHover(value);
+    event.currentTarget?.focus();
   };
+  const handleFocus: React.FocusEventHandler<HTMLSpanElement> = (event) => handleHover(event);
+  const handleMouseOver: React.PointerEventHandler<HTMLSpanElement> = (event) => handleHover(event);
+
+  const handleLeave = (event: React.FocusEvent<HTMLSpanElement> | React.MouseEvent<HTMLSpanElement>) => {
+    onLeave();
+    event.currentTarget?.blur();
+  };
+  const handleBlur: React.FocusEventHandler<HTMLSpanElement> = (event) => handleLeave(event);
+  const handleMouseLeave: React.MouseEventHandler<HTMLSpanElement> = (event) => handleLeave(event);
 
   const handlePointerDown: React.PointerEventHandler<HTMLSpanElement> = () => {
     setPressed(true);
@@ -61,14 +71,14 @@ export const Char: React.FC<CharProps> = ({
   return (
     <span
       {...(index !== undefined ? { tabIndex: index } : {})}
-      onMouseOver={handleHover}
-      onMouseLeave={onLeave}
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseLeave}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerCancel}
-      onBlur={onLeave}
-      onFocus={handleHover}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       onKeyDown={handleKeyDown}
     >
       {value}

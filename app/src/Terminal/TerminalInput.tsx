@@ -8,12 +8,12 @@ type TerminalInputProps = {
   value?: string;
 };
 
-export const TerminalInput: React.FC<TerminalInputProps> = ({
+export const TerminalInput = React.forwardRef<HTMLInputElement, TerminalInputProps>(({
   onInput,
   active,
   value,
   history,
-}) => {
+}, ref) => {
   const [input, setInput] = useState<string>('');
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
@@ -92,10 +92,11 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
     }
   };
 
-  // Mouse/Keyboard - always keep the input in focus so users can type whenever they'd please
-  const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
-    if (isMouse) {
-      event.target.focus();
+  const handleFocus = () => {
+    // Autocomplete any in-progress interval'd selection when this input is focused
+    if (intervalId.current) {
+      abortInterval();
+      setInput(value ?? '');
     }
   };
 
@@ -125,11 +126,11 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
       <span className="input--line">
         &nbsp;{'>'}
         <input
-          // autoFocus
+          ref={ref}
+          onFocus={handleFocus}
           maxLength={15}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          // onBlur={handleBlur}
           value={input}
           disabled={!active}
         />
@@ -153,4 +154,4 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
         .reverse()}
     </div>
   );
-};
+});
