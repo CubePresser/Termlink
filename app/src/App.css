@@ -76,30 +76,28 @@ body::after {
   background-color: greenyellow;
 }
 
-@media only screen and (min-width: 400px) {
-  .Terminal {
-    font-size: small;
-  }
+.data-stream {
+  width: 6.01em;
+  column-count: 1;
+  word-break: break-all;
+  line-break: anywhere;
+  column-gap: 4em;
+  margin-left: 3.5em;
+  line-height: 1em;
 }
 
-/* Tablet */
-@media only screen and (min-width: 480px) {
-  .Terminal {
-    font-size: medium;
-  }
+.address-stream {
+  max-width: 3em;
+  column-count: 2;
+  column-width: 3em;
+  column-gap: 7em;
+  word-break: break-word;
+  line-height: 1em;
 }
 
-/* Desktop */
-@media only screen and (min-width: 768px) {
-  .Terminal {
-    font-size: x-large;
-  }
-}
-
-@media only screen and (min-width: 1200px) {
-  .Terminal {
-    font-size: xx-large;
-  }
+.data--container {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .TerminalHeader {
@@ -170,11 +168,6 @@ button {
   color: black;
 }
 
-.data--container {
-  display: flex;
-  flex-wrap: nowrap;
-}
-
 .TerminalInput {
   position: relative;
   display: flex;
@@ -218,25 +211,6 @@ input {
   cursor: default;
 }
 
-.data-stream {
-  width: 16em;
-  column-count: 2;
-  word-break: break-all;
-  line-break: anywhere;
-  column-gap: 4em;
-  margin-left: 3.5em;
-  line-height: 1em;
-}
-
-.address-stream {
-  max-width: 13em;
-  column-count: 2;
-  column-width: 3em;
-  column-gap: 7em;
-  word-break: break-word;
-  line-height: 1em;
-}
-
 .data-stream span:not(.bracket) {
   cursor: pointer;
 }
@@ -249,4 +223,55 @@ input {
 .data-stream:not(.disabled) .bracket:has(> span:first-child:hover) {
   background-color: greenyellow;
   color: black;
+}
+
+@media only screen and (min-width: 270px) {
+  .Terminal {
+    font-size: small;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .Terminal {
+    font-size: medium;
+  }
+}
+
+/* Tablet */
+@media only screen and (min-width: 480px) {
+  .Terminal {
+    font-size: x-large;
+  }
+}
+
+/* Desktop */
+@media only screen and (min-width: 768px) {
+  .data-stream {
+    width: 16em;
+    column-count: 2;
+    word-break: break-all;
+    line-break: anywhere;
+    column-gap: 4em;
+    margin-left: 3.5em;
+    line-height: 1em;
+  }
+
+  .address-stream {
+    max-width: 13em;
+    column-count: 2;
+    column-width: 3em;
+    column-gap: 7em;
+    word-break: break-word;
+    line-height: 1em;
+  }
+
+  .TerminalInput {
+    flex-direction: column-reverse;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .Terminal {
+    font-size: xx-large;
+  }
 }
